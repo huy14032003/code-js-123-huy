@@ -1,0 +1,20 @@
+import { ApiClient } from "./applib.js";
+const api = new ApiClient('/sample-system')
+api.registerGetEndpoint('getDataViolation', 'getDataViolation');
+api.registerGetEndpoint('getDataTypeError', 'getDataTypeError');
+api.registerGetEndpoint('getDataByViolatorAndViolate', 'getDataByViolatorAndViolate');
+api.registerGetEndpoint('getDataTraining', 'getDataTraining');
+api.registerGetEndpoint('getDataMOC', 'getDataMOC');
+api.registerGetEndpoint('getDataBBS', 'getDataBBS');
+api.registerGetEndpoint('importDataUserCommitment', 'importDataUserCommitment');
+api.registerGetEndpoint('getDataUserCommitment', 'getDataUserCommitment');
+api.registerGetEndpoint('getAnalyzeCommitment', 'getAnalyzeCommitment');
+api.registerGetEndpoint('getChecklistNotice', 'getChecklistNotice');
+api.registerGetEndpoint('getChecklistResult', 'getChecklistResult');
+api.registerGetEndpoint('getBbsAuto', 'getBbsAuto');
+api.registerGetEndpoint('getTopErrorBBSAuto', 'getTopErrorBBSAuto');
+api.registerGetEndpoint('getBbsByOwner', 'getBbsByOwner');
+api.registerGetEndpoint('getLearningByTeam', 'getLearningByTeam');
+api.registerGetEndpoint('getLearningByDay', 'getLearningByDay');
+api.registerGetEndpoint('getBBSInternal', 'getBBSInternal');
+export default api.endpoints; 
