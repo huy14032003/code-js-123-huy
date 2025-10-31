@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<title>D3 Dual Horizontal Bar Responsive</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+  body {
+    background-color: #1e1e1e;
+    color: #fff;
+    font-family: sans-serif;
+  }
+  #chart-container {
+    width: 100%;
+    max-width: 600px;
+    height: 300px;
+    margin: auto;
+  }
+  .bar {
+    rx: 10;
+    ry: 10;
+  }
+  .label {
+    font-size: 13px;
+    fill: #fff;
+    text-anchor: middle;
+    font-weight: 500;
+  }
+  .legend text {
+    font-size: 13px;
+    fill: #fff;
+  }
+</style>
+</head>
+<body>
+<div id="chart-container"></div>
+
+<script>
+const data = [
+  { id: 5, label: "AUT037", count: 5, duration: 7 },
+  { id: 4, label: "AUT037", count: 4, duration: 5 },
+  { id: 3, label: "AUT037", count: 3, duration: 4 },
+  { id: 2, label: "AUT037", count: 2, duration: 3 },
+  { id: 1, label: "AUT037", count: 1, duration: 2 },
+];
+
+function drawChart() {
+  const container = d3.select("#chart-container");
+  
+  // Tạo hoặc chọn SVG
+  const svg = container.selectAll("svg").data([null]).join("svg")
+      .attr("viewBox", "0 0 420 270")
+      .attr("preserveAspectRatio", "xMidYMid meet")
+      .style("width", "100%")
+      .style("height", "100%");
+  
+  const width = container.node().getBoundingClientRect().width;
+  const height = container.node().getBoundingClientRect().height;
+  const margin = { top: 30, right: 60, bottom: 30, left: 60 };
+  const chartW = width - margin.left - margin.right;
+  const chartH = height - margin.top - margin.bottom;
+
+  // Group chính
+  const g = svg.selectAll("g.chart-group").data([null]).join("g")
+      .attr("class","chart-group")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  const maxVal = d3.max(data, d => Math.max(d.count, d.duration));
+  const x = d3.scaleLinear().domain([0, maxVal]).range([0, chartW/2]);
+  const y = d3.scaleBand().domain(data.map(d=>d.id)).range([0, chartH]).padding(0.65);
+
+  // COUNT (trái)
+  const leftBars = g.selectAll(".bar-count").data(data);
+  leftBars.join("rect")
+          .attr("class","bar bar-count")
+          .attr("fill","#ff5f46")
+          .attr("rx",10).attr("ry",10)
+          .attr("y", d=>y(d.id))
+          .attr("height", y.bandwidth())
+          .transition().duration(800)
+          .attr("x", d => chartW/2 - x(d.count))
+          .attr("width", d=>x(d.count));
+
+  // DURATION (phải)
+  const rightBars = g.selectAll(".bar-duration").data(data);
+  rightBars.join("rect")
+           .attr("class","bar bar-duration")
+           .attr("fill","#2ee5eb")
+           .attr("rx",10).attr("ry",10)
+           .attr("y", d=>y(d.id))
+           .attr("height", y.bandwidth())
+           .transition().duration(800)
+           .attr("x", chartW/2)
+           .attr("width", d=>x(d.duration));
+
+  // Label trên
+  g.selectAll(".label").data(data).join("text")
+   .attr("class","label")
+   .attr("x", chartW/2)
+   .attr("y", d=>y(d.id)-6)
+   .attr("text-anchor","middle")
+   .text(d=>d.label);
+
+  // Giá trị COUNT
+  g.selectAll(".count-text").data(data).join("text")
+   .attr("class","count-text")
+   .attr("x", d => chartW/2 - x(d.count) - 6)
+   .attr("y", d => y(d.id) + y.bandwidth()/2)
+   .attr("dy","0.35em")
+   .attr("text-anchor","end")
+   .attr("fill","#fff")
+   .text(d=>d.count);
+
+  // Giá trị DURATION
+  g.selectAll(".duration-text").data(data).join("text")
+   .attr("class","duration-text")
+   .attr("x", d => chartW/2 + x(d.duration) + 6)
+   .attr("y", d => y(d.id) + y.bandwidth()/2)
+   .attr("dy","0.35em")
+   .attr("text-anchor","start")
+   .attr("fill","#fff")
+   .text(d=>d.duration + "H");
+
+  // Legend
+  const legend = svg.selectAll("g.legend").data([null]).join("g")
+      .attr("class","legend")
+      .attr("transform", `translate(${width/2 - 60},${height - 15})`);
+
+  legend.selectAll("*").remove(); // xóa cũ
+
+  legend.append("circle").attr("cx",0).attr("cy",0).attr("r",5).attr("fill","#ff5f46");
+  legend.append("text").attr("x",10).attr("y",4).text("Count");
+  legend.append("circle").attr("cx",80).attr("cy",0).attr("r",5).attr("fill","#2ee5eb");
+  legend.append("text").attr("x",90).attr("y",4).text("Duration");
+}
+
+// Gọi lần đầu
+drawChart();
+
+// Redraw khi resize
+window.addEventListener("resize", drawChart);
+</script>
+</body>
+</html>

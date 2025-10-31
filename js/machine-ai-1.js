@@ -349,14 +349,7 @@ const DashboardSMT = (() => {
         writerAgent('Summary capacity status', _state, checkRedirectToReport);
         _setupEventListener();
         highchartsInit();
-        renderChart1();
-        renderChart2();
-        renderChart3();
-        renderChart4()
-        renderChart5()
-        renderTable1(document.getElementById('table-1'))
-        renderTable2(document.getElementById('table-2'))
-        renderChart6()
+       
     }
 
     function _setupEventListener() {

@@ -28,68 +28,68 @@ export async function createThread() {
  * @param {string[]} opts.highlightCharts 
  * @param {T.State} opts.state
  */
-export function _handleHighlightFromAgent({ showPage, highlightCharts, state, repeat = -1 }) {
-    const highlightAnimation = [{ scaleX: 0.975, scaleY: 0.975 }, { scaleX: 1.025, scaleY: 1.025, duration: 0.5, repeat, yoyo: true }];
+// export function _handleHighlightFromAgent({ showPage, highlightCharts, state, repeat = -1 }) {
+//     const highlightAnimation = [{ scaleX: 0.975, scaleY: 0.975 }, { scaleX: 1.025, scaleY: 1.025, duration: 0.5, repeat, yoyo: true }];
 
-    const ITEM_COUNT = 43;
+//     const ITEM_COUNT = 43;
 
-    for (let i = 1; i <= ITEM_COUNT; i++) {
-        const animate = state[`gsapAnimation${i}`];
-        animate && animate?.kill();
-    }
+//     for (let i = 1; i <= ITEM_COUNT; i++) {
+//         const animate = state[`gsapAnimation${i}`];
+//         animate && animate?.kill();
+//     }
 
-    const chartsMap = new Map([
-        ['home_page', new Map([
-            ['downtime_overall', 1],
-            ['downtime_by_line', 3],
-            ['downtime_by_machine', 4],
-            ['downtime_by_error', 5],
-        ])],
-        ['downtime_by_line', new Map([
-            ['overall', 1],
-            ['analysis_downtime_by_line', 21],
-            ['downtime_by_hours', 8],
-            ['downtime_by_days', 8],
-            ['downtime_by_errors', 5],
-            ['quick_statistic', 14],
-        ])],
-        ['downtime_by_machine', new Map([
-            ['overall', 1],
-            ['downtime_by_hours', 8],
-            ['downtime_by_days', 8],
-            ['downtime_by_errors', 5],
-            ['quick_statistic', 23],
-        ])],
-        ['pickup_overall', new Map([
-            ['overall', 43],
-            ['total_trend', 30],
-            ['pickup_by_line', 33],
-            ['pickup_by_machine', 34],
-            ['pickup_by_feeder', 35],
-            ['pickup_by_nozzle', 37],
-        ])],
-        ['troubleshooting_guide', new Map([
-            ['downtime_by_errors', 5]
-        ])],
-    ]);
+//     const chartsMap = new Map([
+//         ['home_page', new Map([
+//             ['downtime_overall', 1],
+//             ['downtime_by_line', 3],
+//             ['downtime_by_machine', 4],
+//             ['downtime_by_error', 5],
+//         ])],
+//         ['downtime_by_line', new Map([
+//             ['overall', 1],
+//             ['analysis_downtime_by_line', 21],
+//             ['downtime_by_hours', 8],
+//             ['downtime_by_days', 8],
+//             ['downtime_by_errors', 5],
+//             ['quick_statistic', 14],
+//         ])],
+//         ['downtime_by_machine', new Map([
+//             ['overall', 1],
+//             ['downtime_by_hours', 8],
+//             ['downtime_by_days', 8],
+//             ['downtime_by_errors', 5],
+//             ['quick_statistic', 23],
+//         ])],
+//         ['pickup_overall', new Map([
+//             ['overall', 43],
+//             ['total_trend', 30],
+//             ['pickup_by_line', 33],
+//             ['pickup_by_machine', 34],
+//             ['pickup_by_feeder', 35],
+//             ['pickup_by_nozzle', 37],
+//         ])],
+//         ['troubleshooting_guide', new Map([
+//             ['downtime_by_errors', 5]
+//         ])],
+//     ]);
 
-    if (chartsMap.has(showPage)) {
-        const charts = chartsMap.get(showPage);
-        highlightCharts.forEach(chart => {
-            if (charts.has(chart)) {
-                const index = charts.get(chart);
-                state[`gsapAnimation${index}`] = gsap.fromTo(`.cardItem${index}`, ...highlightAnimation).then((tween) => {
-                    if(repeat != -1) {
-                        tween.revert();
-                    }
-                });
-                if(repeat != -1) {
-                    state[`gsapAnimation${index}`] = null;
-                }
-            }
-        })
-    }
-}
+//     if (chartsMap.has(showPage)) {
+//         const charts = chartsMap.get(showPage);
+//         highlightCharts.forEach(chart => {
+//             if (charts.has(chart)) {
+//                 const index = charts.get(chart);
+//                 state[`gsapAnimation${index}`] = gsap.fromTo(`.cardItem${index}`, ...highlightAnimation).then((tween) => {
+//                     if(repeat != -1) {
+//                         tween.revert();
+//                     }
+//                 });
+//                 if(repeat != -1) {
+//                     state[`gsapAnimation${index}`] = null;
+//                 }
+//             }
+//         })
+//     }
+// }
 
 /**
  * @version 1.0.0
@@ -170,7 +170,7 @@ export async function handleMessageFromAgent({ messageEvent, screenController, u
             const { params = {}, showPage = '', highlightCharts = [], errorCode = '' } = messageEvent.data;
             _handleParamsFromAgent({ ...params, errorCode }, state);
             _handleShowPagesFromAgent(showPage, screenController);
-            _handleHighlightFromAgent({ showPage, highlightCharts, state });
+            // _handleHighlightFromAgent({ showPage, highlightCharts, state });
             break;
         default:
             throw new Error("Cannot handle message from agent that not be human or agent");
@@ -400,39 +400,39 @@ export async function writerAgent(message, state, checkRedirectToReport) {
         if (window.firstHighlightFinish) return;
         window.firstHighlightFinish = true;
 
-        highlightTimeouts.push(setTimeout(() => {
-            _handleHighlightFromAgent({
-                showPage: 'downtime_overall',
-                state,
-                highlightCharts: ['agentInteraction'],
-                repeat: 5,
-            });
-        }, 2000));
+        // highlightTimeouts.push(setTimeout(() => {
+        //     _handleHighlightFromAgent({
+        //         showPage: 'downtime_overall',
+        //         state,
+        //         highlightCharts: ['agentInteraction'],
+        //         repeat: 5,
+        //     });
+        // }, 2000));
 
-        highlightTimeouts.push(setTimeout(() => {
-           _handleHighlightFromAgent({
-                showPage: 'downtime_overall',
-                state,
-                highlightCharts: ['machineStatus'],
-                repeat: 5,
-            });
-        }, 7000));
+        // highlightTimeouts.push(setTimeout(() => {
+        //    _handleHighlightFromAgent({
+        //         showPage: 'downtime_overall',
+        //         state,
+        //         highlightCharts: ['machineStatus'],
+        //         repeat: 5,
+        //     });
+        // }, 7000));
 
-        highlightTimeouts.push(setTimeout(() => {
-            gsap.to(".cardItem3", {
-                duration: 1,
-                boxShadow: "#ffffff59 3px 0px 86px 46px",
-                ease: "power2.out"
-            }).then(() => {
-                gsap.to(".cardItem3", {
-                duration: 1,
-                boxShadow: "#ffffff59 0px 0px 0px 0px",
-                ease: "power2.out"
-                });
-                document.querySelector('.cardItem3').classList.add('border-danger');
-                document.querySelector('.cardItem3').classList.remove('border-0');
-            })
-        }, 10000));
+        // highlightTimeouts.push(setTimeout(() => {
+        //     gsap.to(".cardItem3", {
+        //         duration: 1,
+        //         boxShadow: "#ffffff59 3px 0px 86px 46px",
+        //         ease: "power2.out"
+        //     }).then(() => {
+        //         gsap.to(".cardItem3", {
+        //         duration: 1,
+        //         boxShadow: "#ffffff59 0px 0px 0px 0px",
+        //         ease: "power2.out"
+        //         });
+        //         document.querySelector('.cardItem3').classList.add('border-danger');
+        //         document.querySelector('.cardItem3').classList.remove('border-0');
+        //     })
+        // }, 10000));
     } catch (error) {
         if (error.name === 'AbortError') {
             console.log('Fetch aborted (có thể do gọi lại writerAgent)');

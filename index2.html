@@ -25,7 +25,7 @@
   <link rel="stylesheet" preload href="js/libs/cascader/cascader.min.css">
   <link rel="stylesheet" preload href="js/libs/scrollbar/scrollbar.min.css">
   <link rel="stylesheet" preload href="js/libs/tippy/tippy.min.css">
-  <link rel="stylesheet" preload href="js/machine-ai.css">
+  <link rel="stylesheet" preload href="js/style-ai.css">
   <script>
     const BASE_URL = '';
     const agentUiUrl = '<%= agentUiUrl %>';
@@ -48,7 +48,7 @@
   <script src="js/libs/dayjs/dayjs.min.js"></script>
   <script src="js/libs/dayjs/extends/duration.min.js"></script>
   <script src="js/libs/dayjs/extends/isoweek.min.js"></script>
-  <script type="module" src="js/machine-ai.js"></script>
+  <script type="module" src="js/machine-ai-1.js"></script>
 </head>
 <style>
   .bg-green {
@@ -207,26 +207,13 @@
           
           <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem6">
             <div class="d-flex align-items-center justify-content-start gap-5">
-              <span class="fs-5 font-xin mb-1">Machine Status</span>
+              <span class="fs-5 font-xin mb-1">Hourly production output by project and station</span>
 
             </div>
-            <div class="flex-1 overflow-visible" id="table">
-              <div class="table-responsive">
-                <table class="table table-striped table-dark" id="table-1">
-                  <thead>
-                    <tr>
-                      <th>1</th>
-                      <th>2</th>
-                      <th>3</th>
-                      <th>4</th>
-                      <th>5</th>
-                      <th>6</th>
-                      <th>7</th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
-              </div>
+            <div class="flex-1 overflow-visible" id="chart-6">
+              <!-- <div class="table-responsive">
+                
+              </div> -->
             </div>
           </div>
 

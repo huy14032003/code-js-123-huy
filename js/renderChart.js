@@ -1,5 +1,5 @@
 import Highcharts from "./libs/highcharts/esm/highcharts.js";
-
+import{ChartD3}from './chartd3.js'
 const chartsList = [];
 function applyScaleToCharts(baseWidth = 1920, baseMarker = 4, baseLineWidth = 2) {
   const scale = window.innerWidth / baseWidth;
@@ -222,105 +222,138 @@ export function renderChart1() {
   });
 }
 
+
+
 export function renderChart2() {
-  const categories = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-  const dataA = [50, 6, 7, 42, 33, 67, 20, 50, 10, 150];
-  const dataB = [2, 3, 6, 87, 9, 11, 40, 70, 5, 10];
+ ChartD3("#chart-2")
+}
 
-  Highcharts.Templating.helpers.abs = (value) => Math.abs(value);
+export function renderChart3()
+{
+  ChartD3("#chart-3")
+}
 
-  const chart = Highcharts.chart("chart-2", {
-  chart: {
-    type: "bar",
-    animation: { duration: 600 },
-    backgroundColor: "transparent",
-  },
-  title: null,
 
-  // 🔹 Ẩn trục X
-  xAxis: [
-    {
-      categories: categories.slice(0, 6),
-      visible: false, // <-- Ẩn toàn bộ trục X (gồm label + grid)
-    },
-    {
-      opposite: true,
-      linkedTo: 0,
-      categories: categories.slice(0, 6),
-      visible: false, // <-- Ẩn luôn trục X bên phải
-    },
-  ],
-
-  // 🔹 Ẩn grid Y
-  yAxis: {
-    title: { text: null },
-    gridLineWidth: 0, // <-- Ẩn đường kẻ ngang
-    labels: { enabled: false }, // <-- Ẩn nhãn số trục Y
-  },
-
-  plotOptions: {
-    series: {
-      stacking: "normal",
-      borderRadius: 100,
-      animation: { duration: 600 },
-      dataLabels: {
-        enabled: true,
-        formatter() {
-          return Math.abs(this.y);
-        },
-        style: { fontWeight: "bold", color: "#fff" },
+export function renderChart4()
+{
+   Highcharts.chart('chart-4', {
+      chart: {
+        type: 'spline'
       },
-    },
-  },
-
-  series: [
-    { name: "Nhóm 1", data: dataA.slice(0, 6).map((v) => -v), color: "#2b908f" },
-    { name: "Nhóm 2", data: dataB.slice(0, 6), color: "#90ee7e" },
-  ],
-});
-
-// --- Auto scroll setup ---
-let start = 0;
-let scrollInterval;
-
-function scrollChart() {
-  start = (start + 1) % (categories.length - 5);
-  const cats = categories.slice(start, start + 6);
-  chart.xAxis[0].setCategories(cats, false);
-  chart.xAxis[1].setCategories(cats, false);
-
-  const newDataA = dataA.slice(start, start + 6).map((v) => -v);
-  const newDataB = dataB.slice(start, start + 6);
-  chart.series[0].setData(newDataA, false, { duration: 600 });
-  chart.series[1].setData(newDataB, true, { duration: 600 });
-}
-
-function startScroll() {
-  scrollInterval = setInterval(scrollChart, 2000);
-}
-
-function stopScroll() {
-  clearInterval(scrollInterval);
-}
-
-// Bắt đầu cuộn
-startScroll();
-
-// --- Dừng khi hover, chạy lại khi rời ---
-chart.container.addEventListener("mouseenter", stopScroll);
-chart.container.addEventListener("mouseleave", startScroll);
-
-}
-
-// ====== Tự động update khi resize ======
-let resizeTimer;
-window.addEventListener("resize", () => {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => {
-    applyScaleToCharts();
-    chartsList.forEach((chart) => {
-      chart.redraw();
-      drawCenterText(chart);
+      title: {
+        text: null
+      },
+      xAxis: {
+        categories: ['Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7','CN']
+      },
+      yAxis: {
+        title: {
+          text: null
+        }
+      },
+      tooltip: {
+        shared: true
+      },
+      series: [
+        { name: 'Dây A', data: [10, 2, 30, 25, 35, 40, 50] },
+        { name: 'Dây B', data: [5, 15, 29, 20, 30, 35, 45] },
+        { name: 'Dây C', data: [8, 18, 2, 23, 3, 38, 48] },
+        { name: 'Dây D', data: [12, 22, 15, 27, 7, 42, 2] },
+        { name: 'Dây E', data: [7, 17, 27, 22, 32, 66, 4] }
+      ]
     });
-  }, 150);
+}
+export function renderChart5()
+{
+  Highcharts.chart('chart-5', {
+  chart: {
+    zoomType: 'xy'
+  },
+  title: {
+    text: null
+  },
+  xAxis: {
+    categories: ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00',
+                 '08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00',
+                 '16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'],
+    crosshair: true
+  },
+  yAxis: [{
+    // Trục Y cột
+    labels: {
+      format: '{value}',
+      // style: { color: '#FF0000' }
+    },
+    title: {
+      text: 'Số lượng',
+      // style: { color: '#FF0000' }
+    }
+  },{
+    // Trục Y line
+    title: {
+      text: 'Failure Rate (%)',
+      // style: { color: '#FFC107' }
+    },
+    labels: {
+      format: '{value}%',
+      // style: { color: '#FFC107' }
+    },
+    opposite: true
+  }],
+  tooltip: {
+    shared: true
+  },
+  series: [{
+    name: 'NTF',
+    type: 'column',
+    data: [3,12,10,8,24,25,16,1,3,4,12,13,22,21,6,3,9,7,5,1,3,2,5,4],
+    color: '#ff4d504f'
+  },{
+    name: 'Failure',
+    type: 'column',
+    data: [2,8,5,4,20,22,10,0,2,3,10,11,18,17,5,2,8,6,4,0,2,1,3,3],
+    color: '#ff7231ff'
+  },{
+    name: 'Failure Rate',
+    type: 'spline',
+    data: [10,18,12,20,12,22,8,1,7,15,20,25,18,19,10,8,20,15,10,0,5,4,10,12],
+    color: '#f8e36bff',
+    yAxis: 1,
+    marker: {
+      enabled: true,
+      radius: 3
+    }
+  }]
 });
+}
+export function renderChart6()
+{
+  Highcharts.chart('chart-6', {
+    chart: {
+        type: 'bar' // 'bar' là horizontal, 'column' là vertical
+    },
+    title: {
+        text: 'Horizontal Bar Chart'
+    },
+    xAxis: {
+        categories: ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'],
+        title: {
+            text: null
+        }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Fruits eaten',
+            align: 'high'
+        }
+    },
+    series: [{
+        name: 'John',
+        data: [5, 3, 4, 7, 2]
+    }, {
+        name: 'Jane',
+        data: [2, 2, 3, 2, 1]
+    }]
+});
+}
