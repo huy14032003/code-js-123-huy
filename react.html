@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>huy nè</title>
+  </head>
+  <body>
+    <script src="https://unpkg.com/preact@10.19.3/dist/preact.umd.js"></script>
+    <script src="https://unpkg.com/preact@10.19.3/hooks/dist/hooks.umd.js"></script>
+    <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
+
+    <script>
+      const { h, render } = preact;
+      const { useState, useEffect } = preactHooks;
+      const html = htm.bind(h);
+
+      function App() {
+        const [count, setCount] = useState(0);
+
+
+        useEffect(() => {
+          console.log("App mount!");
+        }, [count]);
+
+        return html`
+          <div style="font-family: sans-serif; text-align: center; margin-top: 50px;">
+            <h2>Preact + HTM 🚀</h2>
+            <h3>Count: ${count}</h3>
+            <button onClick=${()=>setCount(count+1)}>Tăng</button>
+            <button onClick=${() => setCount(count - 1)}>Giảm</button>
+          </div>
+        `;
+      }
+
+      render(html`<${App} />`, document.body);
+    </script>
+  </body>
+</html>
