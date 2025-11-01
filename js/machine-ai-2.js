@@ -4,7 +4,7 @@ import AutoScrollElement from "./autoscroll.js";
 import { writerAgent } from "./agent.js";
 import gsap from "./libs/gsap/gsap-core.js";
 import { FORCE_RECALL_LAST_MESSAGE, SETTING_STORE_KEY } from "./config.js";
-import { highchartsInit, renderChart4, renderChart1, renderChart2, renderChart3 ,renderChart5} from "./renderChart.js";
+import { highchartsInit, renderChart13, renderChart12, renderChart11, renderChart10,renderChart1 } from "./renderChart.js";
 import { renderTable3, renderTable2 } from "./renderTable.js";
 
 const DashboardSMT = (() => {
@@ -46,12 +46,13 @@ const DashboardSMT = (() => {
     }
   );
 
-   const _ui = {
+  const _ui = {
     reportPanel: Utils.createDOMRef("reportPanel"),
     appAsideRight: Utils.createDOMRef("appAsideRight"),
     appAsideLeft: Utils.createDOMRef("appAsideLeft"),
     agentProgress: Utils.createDOMRef("agent-interaction-progress"),
     agentPlayground: Utils.createDOMRef("agent-interaction"),
+    table_1: Utils.createDOMRef("table-1"),
   };
 
   function openRightAside() {
@@ -160,15 +161,17 @@ const DashboardSMT = (() => {
     }
   }
 
-function init() {
+  async function init() {
+    scrollizeForWriteAgent();
+    writerAgent("Summary capacity status", _state, checkRedirectToReport);
     highchartsInit();
+    renderChart13();
+    renderChart12();
+    renderChart11();
+    renderChart10();
     renderChart1();
-    renderChart2();
-    renderChart3();
-    renderChart4();
-    renderChart5();
-    renderTable3(document.getElementById("table-1"),7);
-    renderTable3(document.getElementById("table-2"),8);
+    renderTable2(document.getElementById("table-2"))
+    renderTable3(document.getElementById("table-3"),10)
   }
 
   return {

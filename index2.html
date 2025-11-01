@@ -25,7 +25,7 @@
   <link rel="stylesheet" preload href="js/libs/cascader/cascader.min.css">
   <link rel="stylesheet" preload href="js/libs/scrollbar/scrollbar.min.css">
   <link rel="stylesheet" preload href="js/libs/tippy/tippy.min.css">
-  <link rel="stylesheet" preload href="js/style-ai.css">
+  <link rel="stylesheet" preload href="js/machine-ai.css">
   <script>
     const BASE_URL = '';
     const agentUiUrl = '<%= agentUiUrl %>';
@@ -72,6 +72,7 @@
   #chart-1 {
     height: 100% !important;
     width: 100% !important;
+
   }
 </style>
 
@@ -116,25 +117,25 @@
     <div class="flex-1 d-flex justify-content-center" id="appWrapper">
       <div id="appAsideLeft" class="app_aside-left app_aside-left--collapsed transition pe-4 pb-4"></div>
       <div id="appMain" class="app_container--size rounded-4 d-flex flex-column gap-3">
-        <div id="appLayout" class="h-100 screen1">
+        <div id="appLayout" class="h-100 screen2">
           <!-- ============================== {SCREEN 1} ============================ -->
           <!-- Home Statistic 1 Chart 1-->
           <div class="card card-body rounded-4   cardItem cardItem1 h-100 border-0 flex-column">
             <div class="d-flex   flex-column">
-              <span id="workDateDisplayDate" class="fs-4 font-xin">Downtime</span>
+              <span id="workDateDisplayDate" class="fs-4 font-xin">Production Output </span>
               <small id="workDateDisplayDay" class="font-xin"></small>
               <div class="flex-1 d-flex  flex-column h-100 justify-content-center ps-2">
                 <div class="d-flex align-items-center">
                   <div class="flex-1 d-flex align-items-center gap-2">
-                    <span class="">Availability</span>
+                    <span class="">Achieved</span>
                     <span class="text-info fw-medium fs-5" id="availabilityRate">85%</span>
                   </div>
 
                 </div>
                 <div class="d-flex align-items-center">
                   <div class="flex-1 d-flex align-items-center gap-2">
-                    <span class="">Downtime</span>
-                    <span class="text-danger fw-medium fs-5" id="downTimeRate"> 15%</span>
+                    <span class="">Planned Progress</span>
+                    <span class="text-white fw-medium fs-5" id="downTimeRate"> 15%</span>
                   </div>
                 </div>
               </div>
@@ -144,96 +145,46 @@
             </div>
           </div>
 
-          <div
-            class="card card-body rounded-4 p-0 bg-transparent cardItem cardItem43 h-100 border-0 flex-column d-none">
-            <div class="d-flex gap-2 align-items-center">
-              <span id="workDateDisplayDatePickup" class="fs-4 font-xin">00-00</span>
-              <small id="workDateDisplayDayPickup" class="font-xin"></small>
-            </div>
-            <div class="d-flex flex-row flex-1">
-              <div id="chart43" class="flex-1"></div>
-              <div class="flex-1 d-flex gap-2 flex-column h-100 justify-content-center">
-                <div style="height: 3rem" class="d-flex align-items-center">
-                  <div class="flex-1 h-50 d-flex align-items-center">
-                    <span class="fw-medium">Pickup rate</span>
-                  </div>
-                  <div
-                    class="flex-1 h-100 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 rounded">
-                    <span class="text-info fw-bold " id="pickupRate">N/A%</span>
-                  </div>
-                </div>
-                <div style="height: 3rem" class="d-flex align-items-center">
-                  <div class="flex-1 h-100 d-flex align-items-center">
-                    <span class="fw-medium">Throw rate</span>
-                  </div>
-                  <div
-                    class="flex-1 h-100 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 rounded">
-                    <span class="text-danger fw-bold " id="throwRate">N/A%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-
-          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem5">
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem2">
             <div class="d-flex align-items-center justify-content-between">
-              <span class="fs-5 font-xin">Top 5 NTF Rate </span>
+              <div class="">
+                <span class="fs-5 font-xin">Top 5 stations </span><br>
+                <span class="font-xin"> Lowest production output</span>
+              </div>
               <div class="d-flex align-items-center gap-2 justify-content-end">
                 <span id="currentErrorSelected" class="badge rounded-pill text-bg-light d-none">{error}</span>
               </div>
             </div>
-            <!-- <svg class="flex-1 overflow-visible d-none" id="chart-4">
-            </svg> -->
-            <div class="flex-1 overflow-visible" id="chart-4">
-            </div>
-            <div class="d-flex align-items-center gap-2 justify-content-center d-none" id="chart4Legend">
-
-            </div>
-            <div class="d-flex align-items-center gap-2 justify-content-center" id="chart4LegendPareto">
-
-            </div>
-          </div>
-          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem2">
-            <div class="d-flex align-items-center justify-content-start gap-5">
-              <span class="fs-5 font-xin mb-1">Machine Status</span>
-
-
-            </div>
-            <div class="flex-1 overflow-visible" id="chart-5">
-            </div>
-          </div>
-          
-          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem6">
-            <div class="d-flex align-items-center justify-content-start gap-5">
-              <span class="fs-5 font-xin mb-1">Hourly production output by project and station</span>
-
-            </div>
             <div class="flex-1 overflow-visible" id="chart-6">
-              <!-- <div class="table-responsive">
-                
-              </div> -->
             </div>
           </div>
 
-          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem7">
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem3">
             <div class="d-flex align-items-center justify-content-start gap-5">
-              <span class="fs-5 font-xin mb-1">Machine Status</span>
-
+              <span class="fs-5 font-xin mb-1">Production Output status by stations</span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+                <div class="  h-3 w-3 rounded-0" style="background-color: #00E2B5;"></div>
+                <small>&gt;UPH</small>
+                <div class="  h-3 w-3 rounded-0" style="background-color: #E6F338;"></div>
+                <small>&gt;UPH/2</small>
+                <div class="  h-3 w-3 rounded-0" style="background-color: #E45741;"></div>
+                <small> &lt;UPH/2 </small>
+                <div class="bg-white  h-3 w-3 rounded-0"></div>
+                <small>N/A</small>
+              </div>
             </div>
-            <div class="flex-1 overflow-visible" id="table">
+
+            <div class="table-wrapper  w-100 overflow-auto border">
               <div class="table-responsive">
-                <table class="table table-striped table-dark" id="table-2">
+                <table class="table table-dark table-striped table-bordered mb-0" id="table-1">
                   <thead>
                     <tr>
-                      <th>1</th>
-                      <th>2</th>
-                      <th>3</th>
-                      <th>4</th>
-                      <th>5</th>
-                      <th>6</th>
-                      <th>7</th>
+                      <th>Project/Station</th>
+                      <th>AUT</th>
+                      <th>MT</th>
+                      <th>IQ</th>
+                      <th>AFT</th>
+                      <th>ART</th>
                     </tr>
                   </thead>
                   <tbody></tbody>
@@ -242,45 +193,39 @@
             </div>
           </div>
 
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem4">
+            <div class="d-flex align-items-center justify-content-start gap-5">
+              <span class="fs-5 font-xin mb-1">Top 5 machine</span>
+            </div>
+            <div class="flex-1 overflow-visible" id="chart-7">
+            </div>
+          </div>
+
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem5">
+            <div class="d-flex align-items-center justify-content-start gap-5">
+              <span class="fs-5 font-xin mb-1">Hourly production output by project and station</span>
+            </div>
+            <div class="flex-1 overflow-visible" id="chart-8">
+            </div>
+          </div>
+
           <!-- Chart FA by Lines - Chart 2 -->
-          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem3">
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem6">
             <div class="d-flex align-items-center justify-content-between">
-              <span class="fs-5 font-xin">Downtime <small class="text-info ">by lines</small></span>
+              <div class="">
+                <span class="fs-5 font-xin">Top 5 Hourly GAP production output</span><br>
+                <span class="font-xin">Lowest/Highest</span>
+              </div>
               <div class="d-flex align-items-center gap-2 justify-content-end">
                 <span id="currentLineSelected" class="badge rounded-pill text-bg-light d-none">{line}</span>
               </div>
             </div>
 
-            <div class="chart-container d-flex" style="width:100%; height:100%;">
-              <div id="chart-2" class="overflow-hidden flex-fill"></div>
-            </div>
-            <div class="d-flex align-items-center gap-2 justify-content-center">
-              <div class="bg-danger  h-3 w-3 rounded-pill"></div>
-              <small>Count (times)</small>
-              <div class="bg-info  h-3 w-3 rounded-pill"></div>
-              <small>Downtime (hours)</small>
+            <div class="flex-1 overflow-visible" id="chart-9">
             </div>
 
           </div>
 
-          <!-- Chart FA by Machines - Chart 3 -->
-          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem4">
-            <div class="d-flex align-items-center justify-content-between">
-              <span class="fs-5 font-xin">Downtime <small class="text-info">by machines</small></span>
-              <div class="d-flex align-items-center gap-2 justify-content-end">
-                <span id="currentMachineSelected" class="badge rounded-pill text-bg-light d-none">{machine}</span>
-              </div>
-            </div>
-            <div class="chart-container d-flex" style="width:100%; height:100%;">
-              <div id="chart-3" class="overflow-hidden flex-fill"></div>
-            </div>
-            <div class="d-flex align-items-center gap-2 justify-content-center">
-              <div class="bg-danger  h-3 w-3 rounded-pill"></div>
-              <small>Count (times)</small>
-              <div class="bg-info  h-3 w-3 rounded-pill"></div>
-              <small>Downtime (hours)</small>
-            </div>
-          </div>
 
           <div
             class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem42 position-relative overflow-hidden">
@@ -366,8 +311,8 @@
           </div>
         </div>
       </div>
-      <!-- <iframe src="<%= agentUiUrl %>?&apiUrl=<%= agentUrl %>&assistantId=agent&appTheme=dark" frameborder="0" -->
-      <iframe src="" frameborder="0" id="appAsideRight"
+      <iframe src="<%= agentUiUrl %>?&apiUrl=<%= agentUrl %>&assistantId=agent&appTheme=dark" frameborder="0"
+        id="appAsideRight"
         class="app_aside-right transition app_aside-right--collapsed rounded-3 d-flex flex-column mx-3 opacity-0 chatbot-height">
       </iframe>
     </div>

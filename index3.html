@@ -48,7 +48,7 @@
   <script src="js/libs/dayjs/dayjs.min.js"></script>
   <script src="js/libs/dayjs/extends/duration.min.js"></script>
   <script src="js/libs/dayjs/extends/isoweek.min.js"></script>
-  <script type="module" src="js/machine-ai.js"></script>
+  <script type="module" src="js/machine-ai-2.js"></script>
 </head>
 <style>
   .bg-green {
@@ -116,7 +116,7 @@
     <div class="flex-1 d-flex justify-content-center" id="appWrapper">
       <div id="appAsideLeft" class="app_aside-left app_aside-left--collapsed transition pe-4 pb-4"></div>
       <div id="appMain" class="app_container--size rounded-4 d-flex flex-column gap-3">
-        <div id="appLayout" class="h-100 screen1">
+        <div id="appLayout" class="h-100 screen3">
           <!-- ============================== {SCREEN 1} ============================ -->
           <!-- Home Statistic 1 Chart 1-->
           <div class="card card-body rounded-4   cardItem cardItem1 h-100 border-0 flex-column">
@@ -144,157 +144,100 @@
             </div>
           </div>
 
-          <div
-            class="card card-body rounded-4 p-0 bg-transparent cardItem cardItem43 h-100 border-0 flex-column d-none">
-            <div class="d-flex gap-2 align-items-center">
-              <span id="workDateDisplayDatePickup" class="fs-4 font-xin">00-00</span>
-              <small id="workDateDisplayDayPickup" class="font-xin"></small>
-            </div>
-            <div class="d-flex flex-row flex-1">
-              <div id="chart43" class="flex-1"></div>
-              <div class="flex-1 d-flex gap-2 flex-column h-100 justify-content-center">
-                <div style="height: 3rem" class="d-flex align-items-center">
-                  <div class="flex-1 h-50 d-flex align-items-center">
-                    <span class="fw-medium">Pickup rate</span>
-                  </div>
-                  <div
-                    class="flex-1 h-100 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 rounded">
-                    <span class="text-info fw-bold " id="pickupRate">N/A%</span>
-                  </div>
-                </div>
-                <div style="height: 3rem" class="d-flex align-items-center">
-                  <div class="flex-1 h-100 d-flex align-items-center">
-                    <span class="fw-medium">Throw rate</span>
-                  </div>
-                  <div
-                    class="flex-1 h-100 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 rounded">
-                    <span class="text-danger fw-bold " id="throwRate">N/A%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-
-          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem5">
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem2">
             <div class="d-flex align-items-center justify-content-between">
-              <span class="fs-5 font-xin">Top 5 NTF Rate </span>
+              <span class="fs-5 font-xin">Top 5 stations </span>
               <div class="d-flex align-items-center gap-2 justify-content-end">
                 <span id="currentErrorSelected" class="badge rounded-pill text-bg-light d-none">{error}</span>
               </div>
             </div>
-            <!-- <svg class="flex-1 overflow-visible d-none" id="chart-4">
-            </svg> -->
-            <div class="flex-1 overflow-visible" id="chart-4">
-            </div>
-            <div class="d-flex align-items-center gap-2 justify-content-center d-none" id="chart4Legend">
-
-            </div>
-            <div class="d-flex align-items-center gap-2 justify-content-center" id="chart4LegendPareto">
-
+            <div class="flex-1 overflow-visible" id="chart-13">
             </div>
           </div>
-          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem2">
+
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem3">
             <div class="d-flex align-items-center justify-content-start gap-5">
               <span class="fs-5 font-xin mb-1">Machine Status</span>
-
-
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+                <div class="  h-3 w-3 rounded-0" style="background-color: #00E2B5;"></div>
+                <small>RUNNING</small>
+                <div class="  h-3 w-3 rounded-0" style="background-color: #E45741;"></div>
+                <small> ERROR </small>
+                <div class="bg-white  h-3 w-3 rounded-0"></div>
+                <small>OFFLINE</small>
+              </div>
             </div>
-            <div class="flex-1 overflow-visible" id="chart-5">
-            </div>
-          </div>
-          
-          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem6">
-            <div class="d-flex align-items-center justify-content-start gap-5">
-              <span class="fs-5 font-xin mb-1">NTF Summary</span>
-
-            </div>
-            <div class="flex-1 overflow-visible" id="table">
+            <div class="table-wrapper  overflow-auto" >
               <div class="table-responsive">
-                <table class="table table-striped table-dark" id="table-1">
-                  <thead>
-                    <tr>
-                      <th>Machine / Failure code</th>
-                      <th>AUT034</th>
-                      <th>AUT022</th>
-                      <th>AUT021</th>
-                      <th>AUT020</th>
-                      <th>AUT019</th>
-                      <th>Total</th>
-                    </tr>
-                  </thead>
+                <table class="table table-dark table-bordered" id="table-2">
                   <tbody></tbody>
                 </table>
               </div>
             </div>
           </div>
 
-          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem7">
-            <div class="d-flex align-items-center justify-content-start gap-5">
-              <span class="fs-5 font-xin mb-1">Details</span>
 
+
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem4">
+            <div class="d-flex align-items-center justify-content-start gap-5">
+              <span class="fs-5 font-xin mb-1">Top 5 stations</span>
             </div>
-            <div class="flex-1 overflow-visible" id="table">
-              <div class="table-responsive">
-                <table class="table table-striped table-dark" id="table-2">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Machine</th>
-                      <th>Station</th>
-                      <th>Error Description</th>
-                      <th>Cycle Time</th>
-                      <th>Time</th>
-                      <th>Root Cause</th>
-                      <th>Corrective Action</th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
-              </div>
+            <div class="flex-1 overflow-visible" id="chart-11">
+            </div>
+          </div>
+
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem5">
+            <div class="d-flex align-items-center justify-content-start gap-5">
+              <span class="fs-5 font-xin mb-1">Top 5 machine</span>
+            </div>
+            <div class="flex-1 overflow-visible" id="chart-12">
             </div>
           </div>
 
           <!-- Chart FA by Lines - Chart 2 -->
-          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem3">
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem6">
             <div class="d-flex align-items-center justify-content-between">
-              <span class="fs-5 font-xin">Downtime <small class="text-info ">by lines</small></span>
+              <span class="fs-5 font-xin">Downtime by hours/days</span>
               <div class="d-flex align-items-center gap-2 justify-content-end">
                 <span id="currentLineSelected" class="badge rounded-pill text-bg-light d-none">{line}</span>
               </div>
             </div>
 
-            <div class="chart-container d-flex" style="width:100%; height:100%;">
-              <div id="chart-2" class="overflow-hidden flex-fill"></div>
-            </div>
-            <div class="d-flex align-items-center gap-2 justify-content-center">
-              <div class="bg-danger  h-3 w-3 rounded-pill"></div>
-              <small>Count (times)</small>
-              <div class="bg-info  h-3 w-3 rounded-pill"></div>
-              <small>Downtime (hours)</small>
+            <div class="flex-1 overflow-visible" id="chart-10">
             </div>
 
           </div>
-
-          <!-- Chart FA by Machines - Chart 3 -->
-          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem4">
+          <!-- Chart FA by Lines - Chart 2 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem7">
             <div class="d-flex align-items-center justify-content-between">
-              <span class="fs-5 font-xin">Downtime <small class="text-info">by machines</small></span>
+              <span class="fs-5 font-xin">Downtime</span>
               <div class="d-flex align-items-center gap-2 justify-content-end">
-                <span id="currentMachineSelected" class="badge rounded-pill text-bg-light d-none">{machine}</span>
+                <span id="currentLineSelected" class="badge rounded-pill text-bg-light d-none">{line}</span>
               </div>
             </div>
-            <div class="chart-container d-flex" style="width:100%; height:100%;">
-              <div id="chart-3" class="overflow-hidden flex-fill"></div>
+
+            <div class="table-responsive">
+                <table class="table table-dark table-striped" id="table-3">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Machine</th>
+                            <th>Station</th>
+                            <th>Description</th>
+                            <th>Duration</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Owner</th>
+                            <th>Root Cause</th>
+                            <th>Corrective Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
-            <div class="d-flex align-items-center gap-2 justify-content-center">
-              <div class="bg-danger  h-3 w-3 rounded-pill"></div>
-              <small>Count (times)</small>
-              <div class="bg-info  h-3 w-3 rounded-pill"></div>
-              <small>Downtime (hours)</small>
-            </div>
+
           </div>
+
 
           <div
             class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem42 position-relative overflow-hidden">

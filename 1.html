@@ -1,144 +1,1105 @@
+
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en" data-bs-theme="dark">
+
 <head>
-<meta charset="UTF-8" />
-<title>D3 Dual Horizontal Bar Responsive</title>
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<style>
-  body {
-    background-color: #1e1e1e;
-    color: #fff;
-    font-family: sans-serif;
-  }
-  #chart-container {
-    width: 100%;
-    max-width: 600px;
-    height: 300px;
-    margin: auto;
-  }
-  .bar {
-    rx: 10;
-    ry: 10;
-  }
-  .label {
-    font-size: 13px;
-    fill: #fff;
-    text-anchor: middle;
-    font-weight: 500;
-  }
-  .legend text {
-    font-size: 13px;
-    fill: #fff;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+
+  <link rel="stylesheet" preload href="js/libs/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" preload href="js/libs/flatpickr/flatpickr.min.dark.css">
+  <link rel="stylesheet" preload href="js/libs/toastify/toasify.min.css">
+  <link rel="stylesheet" preload href="js/libs/cascader/cascader.min.css">
+  <link rel="stylesheet" preload href="js/libs/scrollbar/scrollbar.min.css">
+  <link rel="stylesheet" preload href="js/libs/tippy/tippy.min.css">
+  <link rel="stylesheet" preload href="api/genai/js/machine-ai.css">
+  <script>
+    const BASE_URL = '';
+    const agentUiUrl = '<%= agentUiUrl %>';
+    const agentUrl = '<%= agentUrl %>';
+    const PAGE_APPEAR = new Date().getTime();
+  </script>
+  <script src="js/libs/bootstrap/bootstrap.min.js"></script>
+  <script src="js/libs/d3/d3.min.js"></script>
+  <script src="js/libs/tippy/popper.min.js"></script>
+  <script src="js/libs/tippy/tippy.min.js"></script>
+  <script src="js/libs/lodash/lodash.min.js"></script>
+  <script src="js/libs/sweetalert/sweetalert.min.js"></script>
+  <script src="js/libs/toastify/toastify.min.js"></script>
+  <script src="js/libs/cascader/cascader.min.js"></script>
+  <script src="js/libs/scrollbar/scrollbar.min.js"></script>
+  <script src="js/libs/activedetector/activedetector.min.js"></script>
+  <script src="js/libs/pagination/pagination.min.js"></script>
+  <script src="js/libs/socketio/socketio.min.js"></script>
+  <script src="js/libs/flatpickr/flatpickr.min.js"></script>
+  <script src="js/libs/dayjs/dayjs.min.js"></script>
+  <script src="js/libs/dayjs/extends/duration.min.js"></script>
+  <script src="js/libs/dayjs/extends/isoweek.min.js"></script>
+  <script type="module" src="api/genai/js/machine-ai.js"></script>
 </head>
-<body>
-<div id="chart-container"></div>
 
-<script>
-const data = [
-  { id: 5, label: "AUT037", count: 5, duration: 7 },
-  { id: 4, label: "AUT037", count: 4, duration: 5 },
-  { id: 3, label: "AUT037", count: 3, duration: 4 },
-  { id: 2, label: "AUT037", count: 2, duration: 3 },
-  { id: 1, label: "AUT037", count: 1, duration: 2 },
-];
+<body class="bg-black neon-corner-effect">
+  <div id="particles-js" class="position-fixed top-0 left-0 right-0 bottom-0" style="
+    z-index: -2;"></div>
+  <div class="position-fixed left-0 right-0 bottom-0 top-0" style="z-index: -1;width: 100vw;height: 100vh;"></div>
+  <div class="d-flex gap-3 flex-column">
+    <div class="h-10 d-flex flex-column position-sticky mt-3"
+      style="backdrop-filter: blur(0.5rem); z-index: 99999999999; top: 1rem">
+      <div class="flex-1 d-flex align-items-center px-4 ">
+        <span class="font-xin fz-1-5 mb-0">SMT SMART CENTER</span>
+        <div class="flex-1 d-flex align-items-center justify-content-center px-4 gap-3">
+          <button onclick="DashboardSMT.toggleLeftAside()"
+            class="btn btn-default bg-secondary bg-opacity-25 h-10 w-12 rounded-pill d-none">
+            <div class="d-flex align-items-center justify-content-center">
+            </div>
+          </button>
+          <button class="btn btn-default border h-10 p-0 w-96 rounded-pill">
+            <input type="text" id="timeSpan" class="text-center">
+          </button>
 
-function drawChart() {
-  const container = d3.select("#chart-container");
-  
-  // Tạo hoặc chọn SVG
-  const svg = container.selectAll("svg").data([null]).join("svg")
-      .attr("viewBox", "0 0 420 270")
-      .attr("preserveAspectRatio", "xMidYMid meet")
-      .style("width", "100%")
-      .style("height", "100%");
-  
-  const width = container.node().getBoundingClientRect().width;
-  const height = container.node().getBoundingClientRect().height;
-  const margin = { top: 30, right: 60, bottom: 30, left: 60 };
-  const chartW = width - margin.left - margin.right;
-  const chartH = height - margin.top - margin.bottom;
+          <button id="filter" type="button"
+            class="flex-grow-1 btn btn-default border h-10 p-0 rounded-pill text-start px-3">
+          </button>
+          <button onclick="DashboardSMT.switchToHome()"
+            class="btn btn-dark bg-secondary bg-opacity-25 h-10 w-24 rounded-pill">
+            <div class="d-flex align-items-center justify-content-evenly h-full">
+              Home
+            </div>
+          </button>
+          <button onclick="DashboardSMT.toggleRightAside()"
+            class="btn btn-dark bg-secondary bg-opacity-25 h-10 w-24 rounded-pill">
+            <div class="d-flex align-items-center justify-content-evenly h-full fw-bold">
+              MAI
+            </div>
+          </button>
+        </div>
+      </div>
 
-  // Group chính
-  const g = svg.selectAll("g.chart-group").data([null]).join("g")
-      .attr("class","chart-group")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
+    </div>
+    <div class="flex-1 d-flex justify-content-center" id="appWrapper">
+      <div id="appAsideLeft" class="app_aside-left app_aside-left--collapsed transition pe-4 pb-4"></div>
+      <div id="appMain" class="app_container--size rounded-4 d-flex flex-column gap-3">
+        <div id="appLayout" class="h-100 screen1">
+          <!-- ============================== {SCREEN 1} ============================ -->
+          <!-- Home Statistic 1 Chart 1-->
+          <div class="card card-body rounded-4 p-0 bg-transparent cardItem cardItem1 h-100 border-0 flex-column">
+            <div class="d-flex gap-2 align-items-center">
+              <span id="workDateDisplayDate" class="fs-4 font-xin">00-00</span>
+              <small id="workDateDisplayDay" class="font-xin"></small>
+            </div>
+            <div class="d-flex flex-row flex-1">
+              <div id="chart1" class="flex-1"></div>
+              <div class="flex-1 d-flex gap-2 flex-column h-100 justify-content-center">
+                <div style="height: 3rem" class="d-flex align-items-center">
+                  <div class="flex-1 d-flex align-items-center">
+                    <span class="fw-medium">Availability</span>
+                  </div>
+                  <div
+                    class="flex-1 h-100 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 rounded">
+                    <span class="text-info fw-bold fs-5" id="availabilityRate">N/A%</span>
+                  </div>
+                </div>
+                <div style="height: 3rem" class="d-flex align-items-center">
+                  <div class="flex-1 d-flex align-items-center">
+                    <span class="fw-medium">Downtime</span>
+                  </div>
+                  <div
+                    class="flex-1 h-100 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 rounded">
+                    <span class="text-danger fw-bold fs-5" id="downTimeRate">N/A%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-  const maxVal = d3.max(data, d => Math.max(d.count, d.duration));
-  const x = d3.scaleLinear().domain([0, maxVal]).range([0, chartW/2]);
-  const y = d3.scaleBand().domain(data.map(d=>d.id)).range([0, chartH]).padding(0.65);
+          <div class="card card-body rounded-4 p-0 bg-transparent cardItem cardItem43 h-100 border-0 flex-column d-none">
+            <div class="d-flex gap-2 align-items-center">
+              <span id="workDateDisplayDatePickup" class="fs-4 font-xin">00-00</span>
+              <small id="workDateDisplayDayPickup" class="font-xin"></small>
+            </div>
+            <div class="d-flex flex-row flex-1">
+              <div id="chart43" class="flex-1"></div>
+              <div class="flex-1 d-flex gap-2 flex-column h-100 justify-content-center">
+                <div style="height: 3rem" class="d-flex align-items-center">
+                  <div class="flex-1 h-50 d-flex align-items-center">
+                    <span class="fw-medium">Pickup rate</span>
+                  </div>
+                  <div
+                    class="flex-1 h-100 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 rounded">
+                    <span class="text-info fw-bold " id="pickupRate">N/A%</span>
+                  </div>
+                </div>
+                <div style="height: 3rem" class="d-flex align-items-center">
+                  <div class="flex-1 h-100 d-flex align-items-center">
+                    <span class="fw-medium">Throw rate</span>
+                  </div>
+                  <div
+                    class="flex-1 h-100 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 rounded">
+                    <span class="text-danger fw-bold " id="throwRate">N/A%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-  // COUNT (trái)
-  const leftBars = g.selectAll(".bar-count").data(data);
-  leftBars.join("rect")
-          .attr("class","bar bar-count")
-          .attr("fill","#ff5f46")
-          .attr("rx",10).attr("ry",10)
-          .attr("y", d=>y(d.id))
-          .attr("height", y.bandwidth())
-          .transition().duration(800)
-          .attr("x", d => chartW/2 - x(d.count))
-          .attr("width", d=>x(d.count));
+          <!-- Table Machine Status -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem2">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin mb-1">Machine Status</span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+                <div class="bg-success  h-3 w-3 rounded-pill"></div>
+                <small>RUN</small>
+                <div class="bg-warning  h-3 w-3 rounded-pill"></div>
+                <small>STOP</small>
+                <div class="bg-danger  h-3 w-3 rounded-pill"></div>
+                <small>ERROR</small>
+                <div class="bg-secondary  h-3 w-3 rounded-pill"></div>
+                <small>OFF</small>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table id="tableMachinesStatus" class="table table-sm table-dark table-striped text-center text-nowrap">
+                <thead class="bg-secondary">
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-  // DURATION (phải)
-  const rightBars = g.selectAll(".bar-duration").data(data);
-  rightBars.join("rect")
-           .attr("class","bar bar-duration")
-           .attr("fill","#2ee5eb")
-           .attr("rx",10).attr("ry",10)
-           .attr("y", d=>y(d.id))
-           .attr("height", y.bandwidth())
-           .transition().duration(800)
-           .attr("x", chartW/2)
-           .attr("width", d=>x(d.duration));
+          <!-- Chart FA by Lines - Chart 2 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem3">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Downtime <small class="text-info ">by lines</small></span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+                <span id="currentLineSelected" class="badge rounded-pill text-bg-light d-none">{line}</span>
+              </div>
+            </div>
+            <svg class="flex-1 overflow-visible d-none" id="chart2">
+            </svg>
+            <div class="flex-1 overflow-visible" id="chart2Column">
+            </div>
+            <div class="d-flex align-items-center gap-2 justify-content-center">
+              <div class="bg-danger  h-3 w-3 rounded-pill"></div>
+              <small>Count (times)</small>
+              <div class="bg-info  h-3 w-3 rounded-pill"></div>
+              <small>Downtime (hours)</small>
+            </div>
+          </div>
 
-  // Label trên
-  g.selectAll(".label").data(data).join("text")
-   .attr("class","label")
-   .attr("x", chartW/2)
-   .attr("y", d=>y(d.id)-6)
-   .attr("text-anchor","middle")
-   .text(d=>d.label);
+          <!-- Chart FA by Machines - Chart 3 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem4">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Downtime <small class="text-info">by machines</small></span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+                <span id="currentMachineSelected" class="badge rounded-pill text-bg-light d-none">{machine}</span>
+              </div>
+            </div>
+            <svg class="flex-1 overflow-visible" id="chart3">
+            </svg>
+            <div class="d-flex align-items-center gap-2 justify-content-center">
+              <div class="bg-danger  h-3 w-3 rounded-pill"></div>
+              <small>Count (times)</small>
+              <div class="bg-info  h-3 w-3 rounded-pill"></div>
+              <small>Downtime (hours)</small>
+            </div>
+          </div>
 
-  // Giá trị COUNT
-  g.selectAll(".count-text").data(data).join("text")
-   .attr("class","count-text")
-   .attr("x", d => chartW/2 - x(d.count) - 6)
-   .attr("y", d => y(d.id) + y.bandwidth()/2)
-   .attr("dy","0.35em")
-   .attr("text-anchor","end")
-   .attr("fill","#fff")
-   .text(d=>d.count);
+          <!-- Chart FA by Errors - Chart 4 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem5">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Downtime <small class="text-info ">by errors</small></span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+                <span id="currentErrorSelected" class="badge rounded-pill text-bg-light d-none">{error}</span>
+              </div>
+            </div>
+            <svg class="flex-1 overflow-visible d-none" id="chart4">
+            </svg>
+            <div class="flex-1 overflow-visible" id="chart4Pareto">
+            </div>
+            <div class="d-flex align-items-center gap-2 justify-content-center d-none" id="chart4Legend">
+              <div class="bg-danger  h-3 w-3 rounded-pill"></div>
+              <small>Count (times)</small>
+              <div class="bg-info  h-3 w-3 rounded-pill"></div>
+              <small>Downtime (hours)</small>
+            </div>
+            <div class="d-flex align-items-center gap-2 justify-content-center" id="chart4LegendPareto">
+              <div class="bg-danger h-3 w-3 rounded-pill"></div>
+              <small>Pareto</small>
+              <div class="bg-info h-3 w-3 rounded-pill"></div>
+              <small>Downtime (hours)</small>
+            </div>
+          </div>
 
-  // Giá trị DURATION
-  g.selectAll(".duration-text").data(data).join("text")
-   .attr("class","duration-text")
-   .attr("x", d => chartW/2 + x(d.duration) + 6)
-   .attr("y", d => y(d.id) + y.bandwidth()/2)
-   .attr("dy","0.35em")
-   .attr("text-anchor","start")
-   .attr("fill","#fff")
-   .text(d=>d.duration + "H");
+          <!-- Chart Total Trend - Chart 5 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem6 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Downtime Trend</span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <!-- <div class="flex-1" id="chart5">
+            </div> -->
+          </div>
 
-  // Legend
-  const legend = svg.selectAll("g.legend").data([null]).join("g")
-      .attr("class","legend")
-      .attr("transform", `translate(${width/2 - 60},${height - 15})`);
+          <!-- Chart Next Trend - Chart 6 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem7 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Next Trend</span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <!-- <div class="flex-1" id="chart6">
+            </div> -->
+          </div>
 
-  legend.selectAll("*").remove(); // xóa cũ
+          <!-- Chart Downtime by Hours - Chart 7 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem8">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="fs-5 font-xin">Downtime
+                <select name="" id="" class="border-0 bg-transparent text-info "
+                  onchange="DashboardSMT.changeDowntimeType(this.value)">
+                  <option class="text-info " value="by hours">by hours</option>
+                  <option class="text-info " value="by days">by days</option>
+                </select></span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <div class="flex-1" id="chart7"></div>
+            <div class="flex-1 d-none" id="chart5"></div>
+            <div id="chart7Legend" class="d-flex align-items-center gap-2 justify-content-center">
+              <div class="bg-danger  h-3 w-3 rounded-pill"></div>
+              <small>Count (times)</small>
+              <div class="bg-info  h-3 w-3 rounded-pill"></div>
+              <small>Downtime (hours)</small>
+            </div>
+            <div id="chart5Legend" class="d-none align-items-center gap-2 justify-content-center">
+              <div class="bg-danger  h-3 w-3 rounded-pill"></div>
+              <small>Downtime (hours)</small>
+              <div class="bg-info  h-3 w-3 rounded-pill"></div>
+              <small>Availability rate</small>
+            </div>
+          </div>
 
-  legend.append("circle").attr("cx",0).attr("cy",0).attr("r",5).attr("fill","#ff5f46");
-  legend.append("text").attr("x",10).attr("y",4).text("Count");
-  legend.append("circle").attr("cx",80).attr("cy",0).attr("r",5).attr("fill","#2ee5eb");
-  legend.append("text").attr("x",90).attr("y",4).text("Duration");
-}
+          <!-- Table Detail - Table 4 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem11">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Detail</span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+                <!-- Thời gian tối thiểu để phía dịch vụ api truy vấn -->
+                <select id="lowestTimeDisplay" title="Select the level for display records on table" class="form-control form-control-sm bg-body rounded-3 mt-1">
+                  <option value="300">Downtime &#8805; 5 minutes</option> <!-- 300s -->
+                  <option value="0">All</option><!-- 0s -->
+                </select>
+                <input type="search" placeholder="  Search by anything ..." id="table-failure-detail-searching" class="bg-body form-control form-control-sm rounded-3 mt-1">
+              </div>
+            </div>
+            <div class="flex-1">
+              <div class="table-responsive mt-1" id="table-failure-detail-wrapper">
+                <table id="table-failure-detail"
+                  class="table table-sm  table-dark table-striped text-center text-nowrap">
+                  <thead>
+                    <tr>
+                      <th>No.</th>
+                      <th class="d-none">Factory</th>
+                      <th class="d-none">Building</th>
+                      <th class="d-none">Project</th>
+                      <th class="d-none">Section</th>
+                      <th>Line</th>
+                      <th>Machine</th>
+                      <th>Error Code</th>
+                      <th>Error Desc</th>
+                      <th>Downtime</th>
+                      <th>Start Time</th>
+                      <th>End Time</th>
+                      <th>ME Owner</th>
+                      <th>Root Cause</th>
+                      <th>Corrective Action</th>
+                      <th class="d-none">Operation</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colspan="100" class="text-center fw-bold">Không có dữ liệu</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div id="table-failure-detail-pagination" class="d-flex gap-2 justify-content-end">
+                <button class="btn btn-outline-primary" disabled>Previous</button>
+                <button class="btn btn-outline-primary" disabled>Next</button>
+              </div>
+            </div>
+          </div>
 
-// Gọi lần đầu
-drawChart();
+           <!-- Modal root cause action -->
+              <div class="modal" id="modal-root-cause" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Root cause action</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                     <form name="form-root-cause" id="form-root-cause" class="needs-validation" novalidate onsubmit="postSubmitRootCause(event)">
+                       <div class="mb-3">
+                        <label for="root-cause" class="form-label">Root cause</label>
+                        <textarea class="form-control text-light bg-body" name="root-cause" id="root-cause" rows="3" required></textarea>
+                        <div id="validationRootCause" class="invalid-feedback">
+                          Please choose a root cause.
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="corrective-action" class="form-label">Corrective action</label>
+                        <textarea class="form-control text-light bg-body" name="corrective-action" id="corrective-action" rows="3" required></textarea>
+                        <div id="validationCorrectiveAction" class="invalid-feedback">
+                          Please choose a corrective action.
+                        </div>
+                      </div>
+                     </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" form="form-root-cause" class="btn btn-sm btn-primary">Save changes</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-// Redraw khi resize
-window.addEventListener("resize", drawChart);
-</script>
+          <!-- ============================== {SCREEN 2} ============================ -->
+          <!-- Downtime analysis by line - Chart 8 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem12 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Downtime Analysis <small class="text-info ">by line</small></span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <div class="flex-1" id="chart8">
+            </div>
+          </div>
+
+          <!-- Downtime by hours - Chart 9 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem13 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Downtime <small class="text-info ">by hours</small></span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <div class="flex-1" id="chart9">
+            </div>
+          </div>
+
+          <!-- Judge Failure Duration Line -->
+           <div
+            class="card card-body rounded-4 p-3 pt-2 h-100 border-0 d-none transition screen2 justify-content-between cardItem cardItem14 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin"><span id="text-judge-2"></span> Quick Statistic</span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <div class="fs-3 text-center">
+              <svg class="text-danger" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 2h-5M4 13.5a8.5 8.5 0 0 1 14.51-6.01m0 0A8.5 8.5 0 0 1 12.5 22H3M18.51 7.49L20 6M8 19H3m3-3H3m9.5-2.5L16 10"/></svg>
+              <br>
+              <span class="fw-bold text-info fs-3" id="text-judge-1">
+                0
+              </span>
+              <small>hours</small>
+            </div>
+            <div>
+            <div class="hstack justify-content-between">
+              <small class="fs-6 text-center">
+                  DURATION
+                  <br>
+                  #
+                  <span class="fw-bold text-info fs-6" id="text-judge-3">
+                    0
+                  </span>
+                </small>
+                <div class="vr"></div>
+                <small class="fs-6 text-center">
+                  COUNT
+                  <br>
+                  <span class="fw-bold text-danger fs-6" id="text-judge-4">
+                    0
+                  </span>
+                  times
+                </small>
+                <div class="vr"></div>
+                <small class="fs-6 text-center">
+                  FREQUENCY
+                  <br>
+                  #
+                  <span class="fw-bold text-danger fs-6" id="text-judge-5">
+                    0
+                  </span>
+                </small>
+              </div>
+              <button id="lineReportAIPort" type="button" is-btn-ai-port data-line="" class="btn mt-2 btn-info w-100 shadow bg-info bg-opacity-50 text-light">Deep Analysis</button>
+            </div>
+          </div>
+          
+
+          <!-- Judge Downtime Ranking Line -->
+          <div id="line-information"
+            class="card card-body rounded-4 p-3 pt-2 h-100 border-0 d-none transition screen2 justify-content-between cardItem cardItem15 d-none">
+          </div>
+
+          <!-- Judge Failure Frequency Line  -->
+          <div
+            class="card card-body rounded-4 p-3 pt-2 h-100 border-0 justify-content-between cardItem cardItem16 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Frequency</span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <div class="fs-3 text-center">
+            </div>
+            &nbsp;
+          </div>
+
+          <!-- Judge Frequency Ranking Line  -->
+          <div
+            class="card card-body rounded-4 p-3 pt-2 h-100 border-0 justify-content-between cardItem cardItem17 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Frequency <small class="text-info ">Rank</small></span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <div class="fs-3 text-center">
+            </div>
+            &nbsp;
+          </div>
+
+          <!-- Document for Line   -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem18 d-none">
+            <div id="text-judge-6">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste ipsa illum voluptates
+              eius
+              quidem esse eaque maxime dolore laboriosam veniam illo delectus tempora praesentium, asperiores
+              voluptatum autem recusandae, sapiente distinctio.</div>
+          </div>
+
+          <!-- Home Statistic 2 Chart 10-->
+          <div class="card card-body rounded-4 p-0 bg-transparent cardItem cardItem19 h-100 d-none border-0">
+            <div class="flex-1 d-flex gap-3">
+              <div class="flex-1 d-flex gap-2 flex-column">
+                <div class="d-flex gap-2 align-items-center">
+                  <span class="fs-4 font-xin">02-08</span>
+                  <small class="font-xin">Tuesday</small>
+                </div>
+                <div class="flex-1 d-flex align-items-center">
+                  <div class="flex-1 h-100 d-flex align-items-center">
+                    <span class="fw-medium">Availability</span>
+                  </div>
+                  <div
+                    class="flex-1 h-50 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 rounded">
+                    <span>N/A%</span>
+                  </div>
+                </div>
+                <div class="flex-1 d-flex align-items-center">
+                  <div class="flex-1 h-100 d-flex align-items-center">
+                    <span class="fw-medium">Downtime rate</span>
+                  </div>
+                  <div
+                    class="flex-1 h-50 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 rounded">
+                    <span>N/A%</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div id="chart10" class="h-100 w-100 overflow-hidden"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================== {SCREEN 3} ============================ -->
+          <!-- Home Statistic 2 -->
+          <div class="card card-body rounded-4 p-0 bg-transparent cardItem cardItem20 h-100 d-none border-0">
+            <div class="flex-1 d-flex gap-3">
+              <div class="flex-1 d-flex gap-2 flex-column">
+                <div class="d-flex gap-2 align-items-center">
+                  <span class="fs-4 font-xin">02-08</span>
+                  <small class="font-xin">Tuesday</small>
+                </div>
+                <div class="flex-1 d-flex">
+                  <div class="flex-1 h-100 d-flex align-items-center">
+                    <span class="fw-medium">Availability</span>
+                  </div>
+                  <div
+                    class="flex-1 h-50 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 rounded">
+                    <span>N/A%</span>
+                  </div>
+                </div>
+                <div class="flex-1 d-flex align-items-center">
+                  <div class="flex-1 h-100 d-flex align-items-center">
+                    <span class="fw-medium">Downtime rate</span>
+                  </div>
+                  <div
+                    class="flex-1 h-50 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 rounded">
+                    <span>N/A%</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div id="chart11" class="h-100 w-100 overflow-hidden"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Downtime analysis by line - Chart 11 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem21 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Downtime Analysis <small class="text-info ">of
+                  line</small></span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <div class="flex-1" id="chart12">
+            </div>
+          </div>
+
+          <!-- Downtime by hours - Chart 12 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem22 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Downtime
+                <select name="" id="" class="border-0 bg-transparent text-info "
+                  onchange="DashboardSMT.changeLineDowntimeType(this.value)">
+                  <option class="text-info " value="by hours">by hours</option>
+                  <option class="text-info " value="by days">by days</option>
+                </select></span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <div class="flex-1" id="chart13">
+            </div>
+            <div class="flex-1 d-none" id="chart6">
+            </div>
+          </div>
+
+          <!-- Judge Failure Duration Machine -->
+          <div
+            class="card card-body rounded-4 p-3 pt-2 h-100 border-0 d-none transition screen2 justify-content-between cardItem cardItem23 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin"><span id="text-judge-8"></span> Quick Statistic</span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <div class="fs-3 text-center">
+              <svg class="text-danger" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 2h-5M4 13.5a8.5 8.5 0 0 1 14.51-6.01m0 0A8.5 8.5 0 0 1 12.5 22H3M18.51 7.49L20 6M8 19H3m3-3H3m9.5-2.5L16 10"/></svg>
+              <br>
+              <span class="fw-bold text-info fs-3" id="text-judge-7">
+                0
+              </span>
+              <small>hours</small>
+              
+            </div>
+            <div>
+
+            <div class="hstack justify-content-between">
+              <small class="fs-6 text-center">
+                  DURATION
+                  <br>
+                  #
+                  <span class="fw-bold text-info fs-6" id="text-judge-9">
+                    0
+                  </span>
+                </small>
+                <div class="vr"></div>
+                <small class="fs-6 text-center">
+                  COUNT
+                  <br>
+                  <span class="fw-bold text-danger fs-6" id="text-judge-10">
+                    0
+                  </span>
+                  times
+                </small>
+                <div class="vr"></div>
+                <small class="fs-6 text-center">
+                  FREQUENCY
+                  <br>
+                  #
+                  <span class="fw-bold text-danger fs-6" id="text-judge-11">
+                    0
+                  </span>
+                </small>
+              </div>
+              <button id="machineReportAIPort" type="button" is-btn-ai-port data-machine="" class="btn mt-2 btn-info w-100 shadow bg-info bg-opacity-50 text-light">Deep Analysis</button>
+            </div>
+          </div>
+
+          <!-- Judge Downtime Ranking Machine -->
+          <div id="machine-information"
+            class="card card-body rounded-4 p-3 h-100 border-0 d-none transition screen2 justify-content-between cardItem cardItem24 d-none">
+            <div class="card flex-1 text-light bg-dark border-danger text-start d-flex">
+                <div class="border-bottom border-secondary p-2">
+                    <strong class="fs-5">N/A</strong> - <small class="text-muted">N/A</small>
+                </div>
+                <div class="row g-2 fs-7 m-2 flex-1">
+                    <div class="col-6">
+                    <div class="text-secondary fw-semibold">Location</div>
+                    <div>n/a - n/a</div>
+                    </div>
+                    <div class="col-6">
+                    <div class="text-secondary fw-semibold">Factory</div>
+                    <div>n/a</div>
+                    </div>
+                    <div class="col-6">
+                    <div class="text-secondary fw-semibold">Building / Floor</div>
+                    <div>n/a / n/a</div>
+                    </div>
+                    <div class="col-6">
+                    <div class="text-secondary fw-semibold">Project</div>
+                    <div>n/a</div>
+                    </div>
+                    <div class="col-6">
+                    <div class="text-secondary fw-semibold">UPH</div>
+                    <div>n/a</div>
+                    </div>
+                    <div class="col-6 d-flex align-items-end mb-2">
+                      <button type="button" is-btn-ai-port="" data-machine="B81S1H1" class="btn btn-danger w-100">Deep Analysis</button>
+                    </div>
+                </div>
+              </div>
+          </div>
+
+          <!-- Judge Failure Frequency Machine  -->
+          <div
+            class="card card-body rounded-4 p-3 pt-2 h-100 border-0 justify-content-between cardItem cardItem25 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin"><span class="text-info">Realtime</span> Status</span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <div class="text-center" id="machine-live-status">
+            </div>
+            &nbsp;
+          </div>
+
+          <!-- Judge Frequency Ranking Line  -->
+          <div
+            class="card card-body rounded-4 p-3 pt-2 h-100 border-0 justify-content-between cardItem cardItem26 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Recently Error</span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+                <div class="bg-success  h-3 w-3 rounded-pill"></div>
+                <small>Finish</small>
+                <div class="bg-danger  h-3 w-3 rounded-pill"></div>
+                <small>Happening</small>
+              </div>
+            </div>
+            <div class="text-center flex-1">
+              <div class="container-recently-error">
+                <!-- 12 items -->
+                <div class="item-recently-error rounded-1 bg-secondary bg-opacity-75"></div>
+                <div class="item-recently-error rounded-1 bg-secondary bg-opacity-25"></div>
+                <div class="item-recently-error rounded-1 bg-secondary bg-opacity-25"></div>
+                <div class="item-recently-error rounded-1 bg-secondary bg-opacity-25"></div>
+                <div class="item-recently-error rounded-1 bg-secondary bg-opacity-25"></div>
+                <div class="item-recently-error rounded-1 bg-secondary bg-opacity-25"></div>
+                <div class="item-recently-error rounded-1 bg-secondary bg-opacity-25"></div>
+                <div class="item-recently-error rounded-1 bg-secondary bg-opacity-25"></div>
+                <div class="item-recently-error rounded-1 bg-secondary bg-opacity-25"></div>
+                <div class="item-recently-error rounded-1 bg-secondary bg-opacity-25"></div>
+                <div class="item-recently-error rounded-1 bg-secondary bg-opacity-25"></div>
+                <div class="item-recently-error rounded-1 bg-secondary bg-opacity-25"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Document for Line   -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem27 d-none">
+            <div id="text-judge-12">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste ipsa illum voluptates
+              eius
+              quidem esse eaque maxime dolore laboriosam veniam illo delectus tempora praesentium, asperiores
+              voluptatum autem recusandae, sapiente distinctio.</div>
+          </div>
+
+          <!-- ============================== {SCREEN 4, 6, 7} ============================ -->
+          <!-- Home Statistic 4 -->
+          <div class="card card-body rounded-4 p-0 bg-transparent cardItem cardItem28 h-100 d-none border-0">
+            <div class="flex-1 d-flex gap-3">
+              <div class="flex-1 d-flex gap-2 flex-column">
+                <div class="d-flex gap-2 align-items-center">
+                  <span class="fs-4 font-xin">02-08</span>
+                  <small class="font-xin">Tuesday</small>
+                </div>
+                <div class="flex-1 d-flex">
+                  <div class="flex-1 h-100 d-flex align-items-center">
+                    <span>Availability</span>
+                  </div>
+                  <div
+                    class="flex-1 h-100 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 rounded">
+                    <span>N\A%</span>
+                  </div>
+                </div>
+                <div class="flex-1 d-flex">
+                  <div class="flex-1 h-100 d-flex align-items-center">
+                    <span>Downtime rate</span>
+                  </div>
+                  <div
+                    class="flex-1 h-100 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 rounded">
+                    <span>N\A%</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div id="chart11" class="h-100 w-100 overflow-hidden"></div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Table Machine Status -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem29 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Pickup Status</span>
+              <div class="d-flex align-items-center gap-4 justify-content-end">
+                <span class="d-flex align-items-center gap-2">
+                  <div class="bg-success h-3 w-3 rounded-pill"></div>
+                  <code class="text-white">99.9% <= x</code>
+                </span>
+                <span class="d-flex align-items-center gap-2">
+                  <div class="bg-warning h-3 w-3 rounded-pill"></div>
+                  <code class="text-white">99.7% < x < 99.9%</code>
+                </span>
+                <span class="d-flex align-items-center gap-2">
+                  <div class="bg-danger h-3 w-3 rounded-pill"></div>
+                  <code class="text-white">x <= 99.7%</code>
+                </span>
+                <span class="d-flex align-items-center gap-2">
+                  <div class="bg-secondary h-3 w-3 rounded-pill"></div>
+                  <small>No data</small>
+                </span>
+              </div>
+            </div>
+            <div class="table-responsive ">
+              <table id="tablePickupStatus" class="table table-sm  table-dark table-striped text-center text-nowrap">
+                <thead class="bg-secondary">
+                  <tr>
+                    <th>SMT</th>
+                    <th>Prt</th>
+                    <th>H1</th>
+                    <th>H2</th>
+                    <th>H3</th>
+                    <th>H4</th>
+                    <th>H5</th>
+                    <th>H6</th>
+                    <th>G1</th>
+                    <th>G2</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Item 1</td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                  </tr>
+                  <tr>
+                    <td>Item 1</td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                  </tr>
+                  <tr>
+                    <td>Item 1</td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                  </tr>
+                  <tr>
+                    <td>Item 1</td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                  </tr>
+                  <tr>
+                    <td>Item 1</td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                  </tr>
+                  <tr>
+                    <td>Item 1</td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                  </tr>
+                  <tr>
+                    <td>Item 1</td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                    <td><span class="bg-warning d-inline-block h-4 w-4 rounded-pill"></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Chart FA by Lines - Chart 13 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem31 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Downtime <small class="text-info ">by lines</small></span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <div class="flex-1" id="chart13">
+            </div>
+          </div>
+
+          <!-- Chart FA by Machines - Chart 14 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem32 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Downtime <small class="text-info ">by machines</small></span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <div class="flex-1" id="chart14">
+            </div>
+          </div>
+
+          <!-- Chart FA by Errors - Chart 15 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem36 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Downtime <small class="text-info ">by errors</small></span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <div class="flex-1" id="chart15">
+            </div>
+          </div>
+
+          <!-- Chart Total Trend - Chart 16 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem30 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Total Trend</span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <div class="flex-1" id="chart16">
+            </div>
+          </div>
+
+          <!-- Chart Next Trend - Chart 17 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem33 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Pickup by Line</span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+                <span id="currentLinePickupSelected" class="badge rounded-pill text-bg-light d-none">{line}</span>
+              </div>
+            </div>
+            <div class="flex-1" id="chart17">
+            </div>
+          </div>
+
+          <!-- Chart Pickup by Machine - Chart 18 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem34 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Pickup by Machine</span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+                <span id="currentMachinePickupSelected" class="badge rounded-pill text-bg-light d-none">{machine}</span>
+              </div>
+            </div>
+            <div class="flex-1" id="chart18">
+            </div>
+          </div>
+
+          <!-- Chart Pickup by Machine - Chart 19 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem35 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Pickup by Feeder</span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <div class="flex-1" id="chart19">
+            </div>
+          </div>
+
+          <!-- Chart Pickup by Machine - Chart 20 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem37 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Pickup by Nozzle</span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <div class="flex-1" id="chart20">
+            </div>
+          </div>
+
+          <!-- Table Detail - Table 7 -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem40 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Detail</span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+              </div>
+            </div>
+            <div class="flex-1">
+              <div class="table-responsive " id="table1Wrapper">
+                <table id="table1" class="table table-sm  table-dark table-striped text-center text-nowrap">
+                  <thead>
+                    <tr>
+                      <th>No.</th>
+                      <th>Line</th>
+                      <th>Machine</th>
+                      <th>Fail Qty</th>
+                      <th>Part Name</th>
+                      <th>Feeder sn</th>
+                      <th>Date Time</th>
+                      <th>Model</th>
+                      <th>MO</th>
+                      <th>PMISS</th>
+                      <th>RMISS</th>
+                      <th>DMISS</th>
+                      <th>MMISS</th>
+                      <th>HMISS</th>
+                      <th>TRSISS</th>
+                      <th>PPIERR</th>
+                      <th>CHANGECOUNT</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colspan="100" class="text-center fw-bold">Không có dữ liệu</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div id="table1-pagination" class="d-none gap-2 justify-content-end"></div>
+            </div>
+          </div>
+
+          <!-- ============================== {SCREEN 5} ============================ -->
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem41 d-none">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="fs-5 font-xin">Documentation</span>
+              <div class="d-flex align-items-center gap-2 justify-content-end">
+                <svg class="cursor-pointer" onclick="DashboardSMT.switchToHome()" xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 24 24"><!-- Icon from Huge Icons by Hugeicons - undefined --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18 6L6 18m12 0L6 6"/></svg>
+              </div>
+            </div>
+            <iframe id="strouble-shooting-doc"
+              src="js/libs/pdfjs/web/viewer.html?file=assets/pdf/document.pdf"
+              frameborder="0" class="h-100"></iframe>
+          </div>
+
+          <div class="card card-body rounded-4 p-3 pt-2 h-100 border-0 cardItem cardItem42 position-relative overflow-hidden">
+            <div id="reportName" class="d-none">
+              Report Of {category} {value}
+            </div>
+            <div class="progress--main" id="agent-interaction-progress">
+            </div>
+            <div class="flex-1 overflow-auto mt-2" id="agent-interaction">
+              <div class="text-center d-flex align-items-center h-100 justify-content-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                  viewBox="0 0 24 24"><!-- Icon from SVG Spinners by Utkarsh Verma - https://github.com/n3r4zzurr0/svg-spinners/blob/main/LICENSE -->
+                  <rect width="2.8" height="12" x="1" y="6" fill="currentColor">
+                    <animate id="SVGLQdHQe4p" attributeName="y" begin="0;SVGg3vsIeGm.end-0.1s" calcMode="spline"
+                      dur="0.6s" keySplines=".36,.61,.3,.98;.36,.61,.3,.98" values="6;1;6" />
+                    <animate attributeName="height" begin="0;SVGg3vsIeGm.end-0.1s" calcMode="spline" dur="0.6s"
+                      keySplines=".36,.61,.3,.98;.36,.61,.3,.98" values="12;22;12" />
+                  </rect>
+                  <rect width="2.8" height="12" x="5.8" y="6" fill="currentColor">
+                    <animate attributeName="y" begin="SVGLQdHQe4p.begin+0.1s" calcMode="spline" dur="0.6s"
+                      keySplines=".36,.61,.3,.98;.36,.61,.3,.98" values="6;1;6" />
+                    <animate attributeName="height" begin="SVGLQdHQe4p.begin+0.1s" calcMode="spline" dur="0.6s"
+                      keySplines=".36,.61,.3,.98;.36,.61,.3,.98" values="12;22;12" />
+                  </rect>
+                  <rect width="2.8" height="12" x="10.6" y="6" fill="currentColor">
+                    <animate attributeName="y" begin="SVGLQdHQe4p.begin+0.2s" calcMode="spline" dur="0.6s"
+                      keySplines=".36,.61,.3,.98;.36,.61,.3,.98" values="6;1;6" />
+                    <animate attributeName="height" begin="SVGLQdHQe4p.begin+0.2s" calcMode="spline" dur="0.6s"
+                      keySplines=".36,.61,.3,.98;.36,.61,.3,.98" values="12;22;12" />
+                  </rect>
+                  <rect width="2.8" height="12" x="15.4" y="6" fill="currentColor">
+                    <animate attributeName="y" begin="SVGLQdHQe4p.begin+0.3s" calcMode="spline" dur="0.6s"
+                      keySplines=".36,.61,.3,.98;.36,.61,.3,.98" values="6;1;6" />
+                    <animate attributeName="height" begin="SVGLQdHQe4p.begin+0.3s" calcMode="spline" dur="0.6s"
+                      keySplines=".36,.61,.3,.98;.36,.61,.3,.98" values="12;22;12" />
+                  </rect>
+                  <rect width="2.8" height="12" x="20.2" y="6" fill="currentColor">
+                    <animate id="SVGg3vsIeGm" attributeName="y" begin="SVGLQdHQe4p.begin+0.4s" calcMode="spline"
+                      dur="0.6s" keySplines=".36,.61,.3,.98;.36,.61,.3,.98" values="6;1;6" />
+                    <animate attributeName="height" begin="SVGLQdHQe4p.begin+0.4s" calcMode="spline" dur="0.6s"
+                      keySplines=".36,.61,.3,.98;.36,.61,.3,.98" values="12;22;12" />
+                  </rect>
+                </svg>
+              </div>
+            </div>
+            <div id="reportPanel" class="position-absolute top-0 app__report-panel end-0 h-100 bg-opacity-50 h-100 rounded-end-4 d-flex flex-row align-items-start justify-content-center py-4">
+              <div style="margin-top: -1.5rem; width: 1.5rem" class="cursor-pointer position-absolute start-0 d-flex flex-column justify-content-center align-items-center h-100" onclick="DashboardSMT.toggleAppPanel()">
+                <svg class="arrow-open text-info" xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24"><!-- Icon from Huge Icons by Hugeicons - undefined --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 17h8m-8-4h4m1-10.5V3c0 2.828 0 4.243.879 5.121C14.757 9 16.172 9 19 9h.5m.5 1.657V14c0 3.771 0 5.657-1.172 6.828S15.771 22 12 22s-5.657 0-6.828-1.172S4 17.771 4 14V9.456c0-3.245 0-4.868.886-5.967a4 4 0 0 1 .603-.603C6.59 2 8.211 2 11.456 2c.705 0 1.058 0 1.381.114q.1.036.197.082c.31.148.559.397 1.058.896l4.736 4.736c.579.578.867.868 1.02 1.235c.152.368.152.776.152 1.594"/></svg>
+                <svg class="arrow-close text-info d-none" xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 24 24"><!-- Icon from Huge Icons by Hugeicons - undefined --><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 6s6 4.419 6 6s-6 6-6 6"/></svg>
+              </div>
+              <div class="list-group w-100 px-4" id="list-report">
+                <p class="card-text placeholder-glow">
+                  <span class="placeholder col-7"></span>
+                  <span class="placeholder col-4"></span>
+                  <span class="placeholder col-4"></span>
+                  <span class="placeholder col-6"></span>
+                  <span class="placeholder col-8"></span>
+                  <span class="placeholder col-7"></span>
+                  <span class="placeholder col-4"></span>
+                  <span class="placeholder col-4"></span>
+                  <span class="placeholder col-6"></span>
+                  <span class="placeholder col-8"></span>
+                  <span class="placeholder col-7"></span>
+                  <span class="placeholder col-4"></span>
+                  <span class="placeholder col-4"></span>
+                  <span class="placeholder col-6"></span>
+                  <span class="placeholder col-8"></span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <iframe src="<%= agentUiUrl %>?&apiUrl=<%= agentUrl %>&assistantId=agent&appTheme=dark" frameborder="0"
+        id="appAsideRight"
+        class="app_aside-right transition app_aside-right--collapsed rounded-3 d-flex flex-column mx-3 opacity-0 chatbot-height">
+      </iframe>
+    </div>
+  </div>
 </body>
+
 </html>
