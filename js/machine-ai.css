@@ -491,7 +491,7 @@ html {
   }
  
   &.screen2 {
-    grid-template-rows: 5rem 5rem 5rem 5rem 5rem 5rem 5rem 5rem 5rem 5rem 5rem 5rem;
+    grid-template-rows: 5rem 5rem 8rem 5rem 5rem 5rem 5rem 5rem 5rem 5rem 5rem 5rem;
     grid-template-areas:
       "cardItem1 cardItem1 cardItem1 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42"
       "cardItem1 cardItem1 cardItem1 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42"
@@ -507,7 +507,7 @@ html {
       "cardItem6 cardItem6 cardItem6 cardItem6 cardItem6 cardItem6 cardItem6 cardItem6 cardItem6 cardItem6 cardItem6 cardItem6"
   }
   &.screen3 {
-    grid-template-rows: 5rem 5rem 5rem 5rem 5rem 5rem 5rem 5rem 5rem 5rem 5rem 5rem;
+    grid-template-rows: 5rem 5rem 8rem 5rem 5rem 5rem 5rem 5rem 5rem 5rem 5rem 5rem;
     grid-template-areas:
       "cardItem1 cardItem1 cardItem1 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42"
       "cardItem1 cardItem1 cardItem1 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42 cardItem42"

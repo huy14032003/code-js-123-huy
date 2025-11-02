@@ -7,6 +7,7 @@ import { FORCE_RECALL_LAST_MESSAGE, SETTING_STORE_KEY } from "./config.js";
 import { highchartsInit, renderChart4, renderChart1, renderChart2, renderChart3 ,renderChart5} from "./renderChart.js";
 import { renderTable3, renderTable2 } from "./renderTable.js";
 
+
 const DashboardSMT = (() => {
   const observerMap = {};
   const _state = new Proxy(
@@ -46,7 +47,7 @@ const DashboardSMT = (() => {
     }
   );
 
-   const _ui = {
+  const _ui = {
     reportPanel: Utils.createDOMRef("reportPanel"),
     appAsideRight: Utils.createDOMRef("appAsideRight"),
     appAsideLeft: Utils.createDOMRef("appAsideLeft"),
@@ -160,7 +161,9 @@ const DashboardSMT = (() => {
     }
   }
 
-function init() {
+  async function init() {
+    scrollizeForWriteAgent();
+    writerAgent("Summary capacity status", _state, checkRedirectToReport);
     highchartsInit();
     renderChart1();
     renderChart2();
@@ -170,6 +173,7 @@ function init() {
     renderTable3(document.getElementById("table-1"),7);
     renderTable3(document.getElementById("table-2"),8);
   }
+
 
   return {
     init,
@@ -208,3 +212,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }),
   });
 });
+

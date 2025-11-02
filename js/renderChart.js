@@ -2,54 +2,28 @@ import Highcharts from "./libs/highcharts/esm/highcharts.js";
 import { ChartD3 } from "./chartd3.js";
 const chartsList = [];
 function applyScaleToCharts(baseWidth = 1920, baseMarker = 4, baseLineWidth = 2) {
-  const scale = window.innerWidth / baseWidth;
-  chartsList.forEach((chart) => {
-    if (chart.series) {
-      chart.series.forEach((series) => {
-        if (["line", "pareto", "spline", "pie"].includes(series.type)) {
-          series.update({ marker: { radius: baseMarker * scale }, lineWidth: baseLineWidth * scale }, false);
-        }
-      });
-      chart.redraw(false);
-    }
-  });
+  // chartsList.forEach((chart) => {
+  //   const containerWidth = chart.renderTo.clientWidth; // 👉 lấy width thật của card
+  //   const scale = containerWidth / baseWidth; // scale theo card chứ không theo window
+  //   console.log(containerWidth,"x")
+  //   console.log(scale)
+  //   if (chart.series) {
+  //     chart.series.forEach((series) => {
+  //       if (["line", "pareto", "spline", "pie", "column"].includes(series.type)) {
+  //         series.update(
+  //           {
+  //             marker: { radius: baseMarker * scale },
+  //             lineWidth: baseLineWidth * scale,
+  //           },
+  //           false
+  //         );
+  //       }
+  //     });
+  //     chart.reflow(); // đảm bảo kích thước chart đúng với khung card
+  //     chart.redraw(false);
+  //   }
+  // });
 }
-function drawCenterText(chart) {
-  const value = chart.series[0].points[0].y;
-
-  // Xóa text cũ
-  if (chart.centerText) chart.centerText.destroy();
-
-  const offsetX = 25;
-  const offsetY = 0;
-  // Tính vị trí giữa thực tế
-  const cx = chart.plotLeft + chart.plotWidth / 2 + offsetX;
-  const cy = chart.plotTop + chart.plotHeight / 2 + offsetY;
-  // 👆 chỉnh offset nhẹ (0.02 = 2%), có thể đổi thành số px cố định nếu muốn
-
-  // Vẽ text giữa chart
-  chart.centerText = chart.renderer
-    .text(`${value}%`, cx, cy)
-    .attr({
-      align: "center",
-      zIndex: 10,
-    })
-    .css({
-      color: "#fff",
-      fontSize: "1.4rem",
-      textOutline: "none",
-    })
-    .add();
-
-  // Căn giữa chính xác bằng cách điều chỉnh điểm neo
-  const bbox = chart.centerText.getBBox();
-  chart.centerText.attr({
-    x: cx - bbox.width / 2,
-    y: cy + bbox.height / 4, // căn chỉnh lại để chữ thật sự giữa vòng
-  });
-}
-
-// ====== Vẽ chữ giữa chart ======
 
 // ====== Cấu hình chung ======
 export const highchartsInit = () => {
@@ -138,24 +112,22 @@ export function renderChart1() {
       type: "solidgauge",
       backgroundColor: "transparent",
       events: {
-        load: function () {
-          chartsList.push(this);
-          applyScaleToCharts();
-          drawCenterText(this);
-        },
-        render: function () {
-          drawCenterText(this);
+        load() {
+          const svg = this.renderer.box;
+          const width = this.chartWidth;
+          const height = this.chartHeight;
+          svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+          svg.removeAttribute("width");
+          svg.removeAttribute("height");
+          svg.style.width = "100%";
+          svg.style.height = "100%";
         },
       },
     },
 
-    title: {
-      text: null,
-    },
+    title: { text: null },
 
-    tooltip: {
-      enabled: false,
-    },
+    tooltip: { enabled: false },
 
     pane: {
       startAngle: 0,
@@ -186,11 +158,13 @@ export function renderChart1() {
     plotOptions: {
       solidgauge: {
         dataLabels: {
-          enabled: false,
+          enabled: true,
           borderWidth: 0,
           format: "{y}%",
+          verticalAlign: "middle", // canh dọc center
+          y: 0,
           style: {
-            fontSize: "1.3rem",
+            fontSize: "1.5rem",
             color: "#fff",
             textOutline: "none",
           },
@@ -203,25 +177,11 @@ export function renderChart1() {
     series: [
       {
         name: "Efficiency",
-        data: [
-          {
-            color: "#00ffff",
-            radius: "112%",
-            innerRadius: "88%",
-            y: 78,
-          },
-        ],
+        data: [{ color: "#00ffff", radius: "112%", innerRadius: "88%", y: 78 }],
       },
       {
         name: "Performance",
-        data: [
-          {
-            color: "#ffff00",
-            radius: "87%",
-            innerRadius: "63%",
-            y: 52,
-          },
-        ],
+        data: [{ color: "#ffff00", radius: "87%", innerRadius: "63%", y: 52 }],
       },
     ],
   });
@@ -239,6 +199,12 @@ export function renderChart4() {
   Highcharts.chart("chart-4", {
     chart: {
       type: "spline",
+      events: {
+        load: function () {
+          chartsList.push(this);
+          applyScaleToCharts();
+        },
+      },
     },
     title: {
       text: null,
@@ -265,13 +231,21 @@ export function renderChart4() {
 }
 
 export function renderChart5() {
-  Highcharts.chart("chart-5", {
+  if (window.chart5Instance) {
+    window.chart5Instance.destroy();
+  }
+
+  window.chart5Instance = Highcharts.chart("chart-5", {
     chart: {
       zoomType: "xy",
+      backgroundColor: "transparent",
+      height: null, // auto height theo container
+      width: null, // auto width theo container
+      style: {
+        fontFamily: "Segoe UI, sans-serif",
+      },
     },
-    title: {
-      text: null,
-    },
+    title: { text: null },
     xAxis: {
       categories: [
         "00:00",
@@ -303,32 +277,31 @@ export function renderChart5() {
     },
     yAxis: [
       {
-        labels: {
-          format: "{value}",
-        },
-        title: {
-          text:null,
-        },
+        labels: { format: "{value}" },
+        title: { text: null },
       },
       {
-        title: {
-          text: null,
-        },
-        labels: {
-          format: "{value}%",
-        },
+        title: { text: null },
+        labels: { format: "{value}%" },
         opposite: true,
       },
     ],
-    tooltip: {
-      shared: true,
-    },
-    plotOptions:{
-      column:{
+    tooltip: { shared: true },
+    plotOptions: {
+      column: {
         borderRadius: 5,
-         maxPointWidth: 20,
+        maxPointWidth: 20,
         pointWidth: 20,
-      }
+        grouping: true, // nếu muốn stacked đổi thành false
+        events: {
+          mouseOver: function () {
+            // highlight bar nếu muốn
+          },
+        },
+      },
+      series: {
+        animation: { duration: 1000 }, // animation khi load
+      },
     },
     series: [
       {
@@ -349,12 +322,27 @@ export function renderChart5() {
         data: [10, 18, 12, 20, 12, 22, 8, 1, 7, 15, 20, 25, 18, 19, 10, 8, 20, 15, 10, 0, 5, 4, 10, 12],
         color: "#FFB84D",
         yAxis: 1,
-        marker: {
-          enabled: true,
-          radius: 3,
-        },
+        marker: { enabled: true, radius: 3 },
       },
     ],
+    responsive: {
+      rules: [
+        {
+          condition: { maxWidth: 600 },
+          chartOptions: {
+            plotOptions: { column: { maxPointWidth: 10 } },
+            legend: { enabled: false },
+          },
+        },
+      ],
+    },
+  });
+
+  // Reflow khi window resize để auto scale
+  window.addEventListener("resize", () => {
+    if (window.chart5Instance) {
+      window.chart5Instance.reflow();
+    }
   });
 }
 
@@ -362,6 +350,12 @@ export function renderChart9() {
   Highcharts.chart("chart-9", {
     chart: {
       type: "line",
+      events: {
+        load: function () {
+          chartsList.push(this);
+          applyScaleToCharts();
+        },
+      },
     },
     title: {
       text: null,
@@ -392,6 +386,12 @@ export function renderChart8() {
     chart: {
       type: "column",
       backgroundColor: "transparent",
+      events: {
+        load: function () {
+          chartsList.push(this);
+          applyScaleToCharts();
+        },
+      },
     },
     title: { text: null },
     xAxis: {
@@ -437,18 +437,48 @@ export function renderChart8() {
 
 export function renderChart7() {
   Highcharts.chart("chart-7", {
-    chart: { type: "bar", backgroundColor: "transparent" },
+    chart: {
+      type: "bar",
+      backgroundColor: "transparent",
+      // events: {
+      //   load() {
+      //     const chart = this;
+      //     setTimeout(() => {
+      //       const svg = chart.renderer.box;
+      //       const width = chart.chartWidth;
+      //       const height = chart.chartHeight;
+
+      //       svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      //       svg.removeAttribute("width");
+      //       svg.removeAttribute("height");
+      //       svg.style.width = "100%";
+      //       svg.style.height = "100%";
+      //     }, 0);
+      //   },
+      //   render() {
+      //     const chart = this;
+      //     const svg = chart.renderer.box;
+      //     const width = chart.chartWidth;
+      //     const height = chart.chartHeight;
+
+      //     svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      //     svg.removeAttribute("width");
+      //     svg.removeAttribute("height");
+      //     svg.style.width = "100%";
+      //     svg.style.height = "100%";
+      //   },
+      // },
+    },
     title: { text: "" },
     xAxis: { categories: ["U1", "AF", "AP", "AT", "E0"] },
     yAxis: { title: { text: null }, opposite: true },
     legend: { enabled: false },
     plotOptions: {
-      bar: { dataLabels: { enabled: true, color: "#fff" } },
+      bar: { dataLabels: { enabled: false, color: "#fff" } },
     },
     series: [
       {
         name: "Downtime",
-
         color: {
           linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
           stops: [
@@ -464,7 +494,21 @@ export function renderChart7() {
 
 export function renderChart6() {
   Highcharts.chart("chart-6", {
-    chart: { type: "bar", backgroundColor: "transparent" },
+    chart: {
+      type: "bar",
+      backgroundColor: "transparent",
+      events: {
+        load: function () {
+          chartsList.push(this);
+          applyScaleToCharts();
+
+          // 👇 Quan trọng: thêm ResizeObserver cho container riêng của chart
+          const container = this.renderTo;
+          const observer = new ResizeObserver(() => applyScaleToCharts());
+          observer.observe(container);
+        },
+      },
+    },
     title: { text: null },
     xAxis: { categories: ["A/C", "A/B", "A/E", "A/D", "A/F"] },
     yAxis: { title: { text: null }, opposite: true },
@@ -504,7 +548,7 @@ export function renderChart10() {
         opposite: true,
       },
     ],
-    legend: { itemStyle: { color: "#fff" }, verticalAlign: "top", align: "right",y: -10,  },
+    legend: { itemStyle: { color: "#fff" }, verticalAlign: "top", align: "right", y: -10 },
     tooltip: { shared: true },
     plotOptions: {
       column: { borderRadius: 5, dataLabels: { enabled: true, color: "#fff" } },
@@ -536,14 +580,58 @@ export function renderChart10() {
 }
 
 export function renderChart11() {
-  Highcharts.chart("chart-11", {
-    chart: { type: "bar", backgroundColor: "transparent" },
+  // destroy chart cũ nếu có
+  if (window.chart11Instance) {
+    window.chart11Instance.destroy();
+  }
+
+  window.chart11Instance = Highcharts.chart("chart-11", {
+    chart: {
+      type: "bar",
+      backgroundColor: "transparent",
+      height: null, // auto height
+      width: null,  // auto width
+      events: {
+        load() {
+          const svg = this.renderer.box;
+          const width = this.chartWidth;
+          const height = this.chartHeight;
+          svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+          svg.removeAttribute("width");
+          svg.removeAttribute("height");
+          svg.style.width = "100%";
+          svg.style.height = "100%";
+        },
+      },
+    },
     title: { text: null },
-    xAxis: { categories: ["U1", "AF", "AP", "AT", "E0"] },
-    yAxis: { title: { text: null },opposite: true },
+    xAxis: {
+      categories: ["U1", "AF", "AP", "AT", "E0"],
+      title: { text: null },
+    },
+    yAxis: {
+      title: { text: null },
+      opposite: true,
+    },
     legend: { enabled: false },
+    tooltip: {
+      enabled: true,
+      backgroundColor: "rgba(0,0,0,0.7)",
+      style: { color: "#fff" },
+      formatter: function () {
+        return `<b>${this.x}</b>: ${this.y}`;
+      },
+    },
     plotOptions: {
-      bar: { dataLabels: { enabled: false, color: "#fff" } },
+      bar: {
+        dataLabels: { enabled: true, color: "#fff" },
+        borderRadius: 5,
+        animation: { duration: 800 },
+        states: {
+          hover: { brightness: 0.1 } // highlight hover
+        }
+      },
+      series: { animation: { duration: 800 } }
     },
     series: [
       {
@@ -558,15 +646,32 @@ export function renderChart11() {
         data: [15, 20, 25, 18, 30],
       },
     ],
+    responsive: {
+      rules: [
+        {
+          condition: { maxWidth: 600 },
+          chartOptions: {
+            plotOptions: { bar: { maxPointWidth: 20 } },
+            xAxis: { labels: { style: { fontSize: "10px" } } }
+          }
+        }
+      ]
+    }
+  });
+
+  // auto reflow khi resize
+  window.addEventListener("resize", () => {
+    if (window.chart11Instance) window.chart11Instance.reflow();
   });
 }
 
+
 export function renderChart12() {
   Highcharts.chart("chart-12", {
-    chart: { type: "bar", backgroundColor: "transparent" ,spacing: [0, 0, 0, 0],},
+    chart: { type: "bar", backgroundColor: "transparent", spacing: [0, 0, 0, 0] },
     title: { text: null },
-    xAxis: { categories: ["A/C", "A/B", "A/E", "A/D", "A/F"], },
-    yAxis: { title: { text: null },opposite: true },
+    xAxis: { categories: ["A/C", "A/B", "A/E", "A/D", "A/F"] },
+    yAxis: { title: { text: null }, opposite: true },
     legend: { enabled: false },
     plotOptions: {
       bar: { dataLabels: { enabled: false, color: "#fff" } },
@@ -635,4 +740,3 @@ export function renderChart13() {
     ],
   });
 }
-

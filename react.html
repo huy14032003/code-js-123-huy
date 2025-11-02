@@ -3,37 +3,149 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>huy nè</title>
-  </head>
-  <body>
-    <script src="https://unpkg.com/preact@10.19.3/dist/preact.umd.js"></script>
-    <script src="https://unpkg.com/preact@10.19.3/hooks/dist/hooks.umd.js"></script>
-    <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
-
-    <script>
-      const { h, render } = preact;
-      const { useState, useEffect } = preactHooks;
-      const html = htm.bind(h);
-
-      function App() {
-        const [count, setCount] = useState(0);
-
-
-        useEffect(() => {
-          console.log("App mount!");
-        }, [count]);
-
-        return html`
-          <div style="font-family: sans-serif; text-align: center; margin-top: 50px;">
-            <h2>Preact + HTM 🚀</h2>
-            <h3>Count: ${count}</h3>
-            <button onClick=${()=>setCount(count+1)}>Tăng</button>
-            <button onClick=${() => setCount(count - 1)}>Giảm</button>
-          </div>
-        `;
+    <title>Highcharts VW/VH Responsive</title>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <style>
+      /* html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: #f4f4f4;
       }
 
-      render(html`<${App} />`, document.body);
+      .chart-container {
+        width: 80vw;
+        height: 65vh;
+        margin: 5vh auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Dùng font theo viewport */
+      :root {
+        --font-base: calc(0.8vw + 0.4vh + 6px);
+      } 
+    </style>
+  </head>
+  <body>
+    <div id="chart-5" class="chart-container"></div>
+
+    <script>
+      function renderChart5() {
+        const fontBase = getComputedStyle(document.documentElement)
+          .getPropertyValue("--font-base");
+
+        const chart = Highcharts.chart("chart-5", {
+          chart: {
+            type: "column",
+            backgroundColor: "transparent",
+            style: {
+              fontFamily: "Segoe UI, sans-serif",
+              fontSize: fontBase,
+            },
+            events: {
+              load() {
+                const svg = this.renderer.box;
+                const w = this.chartWidth;
+                const h = this.chartHeight;
+                svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+                svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+              },
+            },
+          },
+          title: {
+            text: "NTF - Failure - Failure Rate theo giờ",
+            style: {
+              fontSize: `calc(${fontBase} * 1.2)`,
+              fontWeight: 600,
+            },
+          },
+          xAxis: {
+            categories: Array.from({ length: 24 }, (_, i) =>
+              `${i.toString().padStart(2, "0")}:00`
+            ),
+            labels: {
+              style: {
+                fontSize: `calc(${fontBase} * 0.9)`,
+              },
+            },
+          },
+          yAxis: [
+            {
+              labels: {
+                format: "{value}",
+                style: { fontSize: `calc(${fontBase} * 0.9)` },
+              },
+              title: { text: null },
+            },
+            {
+              title: { text: null },
+              labels: {
+                format: "{value}%",
+                style: { fontSize: `calc(${fontBase} * 0.9)` },
+              },
+              opposite: true,
+            },
+          ],
+          tooltip: { shared: true },
+          plotOptions: {
+            column: {
+              borderRadius: 5,
+              maxPointWidth: 20,
+            },
+          },
+          legend: {
+            itemStyle: {
+              fontSize: `calc(${fontBase} * 0.9)`,
+            },
+          },
+          series: [
+            {
+              name: "NTF",
+              type: "column",
+              data: Array.from({ length: 24 }, () =>
+                Math.floor(Math.random() * 25)
+              ),
+              color: "#5D3032",
+            },
+            {
+              name: "Failure",
+              type: "column",
+              data: Array.from({ length: 24 }, () =>
+                Math.floor(Math.random() * 20)
+              ),
+              color: "#FF4D4D",
+            },
+            {
+              name: "Failure Rate",
+              type: "spline",
+              data: Array.from({ length: 24 }, () =>
+                Math.floor(Math.random() * 25)
+              ),
+              color: "#FFB84D",
+              yAxis: 1,
+              marker: { enabled: true, radius: 3 },
+            },
+          ],
+          credits: { enabled: false },
+        });
+
+        // Reflow khi khung thay đổi kích thước
+        const observer = new ResizeObserver(() => {
+          chart.reflow();
+        });
+        observer.observe(document.querySelector(".chart-container"));
+
+        return chart;
+      }
+
+      let chart5 = renderChart5();
+
+      window.addEventListener("resize", () => {
+        chart5.reflow(); // không cần destroy nữa
+      });
     </script>
   </body>
 </html>
